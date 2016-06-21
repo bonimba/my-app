@@ -1,0 +1,18 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/my-app.html",
+  "fragments": [
+    "src/watch-now-view.html",
+    "src/my-subscriptions-view.html",
+    "src/explore-view.html",
+    "src/settings-view.html",
+    "src/my-subscriptions/channels-view.html",
+    "src/my-subscriptions/searches-view.html",
+    "src/my-subscriptions/tabs-view.html",
+    "src/explore/explore-channels-view.html",
+    "src/explore/explore-searches-view.html",
+    "src/watch-now/generic-channel-view.html",
+    "src/watch-now/generic-search-view.html",
+    "src/watch-now/highlights-view.html"
+  ]
+}
