@@ -18,7 +18,8 @@
     "polymer": "polymer/polymer#^1.4.0",
     "paper-tabs": "PolymerElements/paper-tabs#^1.6.2",
     "paper-fab": "PolymerElements/paper-fab#^1.2.0",
-    "iron-ajax": "PolymerElements/iron-ajax#^1.2.0"
+    "iron-ajax": "PolymerElements/iron-ajax#^1.2.0",
+    "google-youtube": "GoogleWebComponents/google-youtube#^1.2.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
