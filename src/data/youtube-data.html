@@ -1,0 +1,64 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+
+<dom-module id="youtube-data">
+
+    <template>
+        <iron-ajax
+                auto
+                url="[[url]]"
+                params='{{parameters}}'
+                handle-as="json"
+                last-response="{{response}}"
+                debounce-duration="300"></iron-ajax>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'youtube-data',
+            properties: {
+                base : {
+                    type: string,
+                    value: "https://www.googleapis.com/youtube/v3"
+                },
+                specific: {
+                    type: string,
+                    value: 'channels'
+                },
+                url: {
+                    type: string,
+                    computed: 'computeUrl'
+                },
+                params : {
+                    type: string,
+                    value: '"part: contentDetails", "forUsername": "bonimba33733"'
+                },
+
+                youtubeKey: {
+                    type: string,
+                    value: '"key": "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"'
+                },
+
+                parameters: {
+                    type: string,
+                    computed: 'computeParameters'
+                },
+                response: {
+                    type: Object,
+                    value: {},
+                    notify: true
+                }
+            },
+
+            computeUrl: function(base, specific){
+                return [base, specific].join("/");
+            },
+
+            computeParameters: function(params, youtubeKey){
+                return Object.assign({}, params, youtubeKey);
+            }
+
+        });
+    </script>
+</dom-module>
