@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="channel-data">
 
@@ -36,7 +36,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: String,
                     value: "https://www.googleapis.com/youtube/v3"
                 },
-                last: {
+                specific: {
                     type: String,
                     value: 'channels'
                 },
@@ -53,20 +53,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                  value: 'AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA'
                  },
 
-                 parameters: {
-                 type: String,
-                 computed: 'computeParameters'
-                 }
+                response: {
+                    type: Object,
+                    value: {},
+                    notify: true
+                }
             },
 
-            computeUrl: function(base, last){
-                return [base, last].join("/");
-            }/*,
-
-             computeParameters: function(params, youtubeKey){
-             var parameters = params["key"] = youtubeKey;
-             return parameters;
-             }*/
+            computeUrl: function(base, specific){
+                return [base, specific].join("/");
+            }
 
         });
 
