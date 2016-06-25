@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../cards/video-card.html">
+<link rel="import" href="../data/channel-data.html">
+
+<dom-module id="video-list">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+
+        </style>
+
+        <template is="dom-bind">
+            <channel-data
+                    last="api"
+                    response="{{data}}"
+            ></channel-data>
+
+            <iron-list items="[[data.items]]" as="item">
+                <video-card
+                    video-id=[[item.contentDetails.playlistItem.resourceId.videoId]]
+                    videoTitle=[[item.title]]
+                    channelName=[[item.channelTitle]]
+                ></video-card>
+            </iron-list>
+        </template>
+
+    </template>
+
+
+    <script>
+
+        Polymer({
+            is: 'video-list',
+            properties:{
+                api: {
+                    type: String,
+                    value: 'channels'
+                },
+                params: {
+                    type: Object,
+                    value: {}
+                }
+            },
+
+            ready: function() {
+
+            }
+        });
+
+    </script>
+
+</dom-module>
