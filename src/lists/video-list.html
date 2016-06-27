@@ -15,11 +15,11 @@
 
         <template is="dom-bind">
             <channel-data
-                    last="api"
-                    response="{{data}}"
+                specific="channels"
+                response="{{data}}"
             ></channel-data>
 
-            <iron-list items="[[data.items]]" as="item">
+            <iron-list items="{{data.items}}" as="item">
                 <video-card
                     video-id=[[item.contentDetails.playlistItem.resourceId.videoId]]
                     videoTitle=[[item.title]]
@@ -36,7 +36,7 @@
         Polymer({
             is: 'video-list',
             properties:{
-                api: {
+                specific: {
                     type: String,
                     value: 'channels'
                 },
@@ -46,8 +46,8 @@
                 }
             },
 
-            ready: function() {
-
+            ready: function(){
+                console.log('video-list');
             }
         });
 

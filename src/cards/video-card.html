@@ -11,8 +11,7 @@
         :host {
             display: block;
             box-sizing: border-box;
-            margin: 2%;
-            width: 96%;
+            width: 100%;
             @apply(--layout-vertical);
         }
 
@@ -54,63 +53,66 @@
     </style>
 
     <template>
-        <paper-card elevation="2">
-            <iron-flex-layout>
-                <div id="card-header">
-                    <div id="channel-icon">
-                        <iron-icon icon='face'></iron-icon>
+        <template is="dom-bind">
+            <paper-card elevation="2">
+                <iron-flex-layout>
+                    <div id="card-header">
+                        <div id="channel-icon">
+                            <iron-icon icon='face'></iron-icon>
+                        </div>
+                        <div id="channel-name">
+                            <label>[[channelName]]</label>
+                        </div>
+                        <div id="menu-icon">
+                            <a><iron-icon icon="more-vert"></iron-icon></a>
+                        </div>
                     </div>
-                    <div id="channel-name">
-                        <label>[[channelName]]</label>
-                    </div>
-                    <div id="menu-icon">
-                        <a><iron-icon icon="more-vert"></iron-icon></a>
-                    </div>
-                </div>
-                <div class="card-content">
-                    <div id="video-content">
-                        <google-youtube
-                                video-id=[[videoId]]
-                                width="100%"
-                                rel="0"
-                                start="0"
-                                autoplay="0">
-                        </google-youtube>
-                        <!-- <ul>
-                          <li>
-                            <label>[[videoTime]]</label>
-                            <iron-icon icon="icons:query-builder"></iron-icon>
-                          </li>
-                          <li>
-                            <label>[[videoViews]]</label>
-                            <iron-icon icon="icons:visibility"></iron-icon>
-                          </li>
-                          <li>
-                            <label>[[videoLikes]]</label>
-                            <iron-icon icon="icons:thumb-up"></iron-icon>
-                          </li>
-                          <li>
-                            <label>[[videoUnlikes]]</label>
-                            <iron-icon icon="icons:thumb-down"></iron-icon>
-                          </li>
-                          <li>
-                            <label>[[videoShares]]</label>
-                            <iron-icon icon="icons:more-vert"></iron-icon>
-                          </li>
-                        </ul> -->
-                    </div>
-                    <div class="self-end">
-                        <label>[[videoTitle]]</label>
-                        <span class="flex"></span>
-            <span>
-                <label>[[videoTime]]</label>
-                <iron-icon icon="query-builder"></iron-icon>
-            </span>
+                    <div class="card-content">
+                        <div id="video-content">
+                            <google-youtube
+                                    video-id=[[videoId]]
+                                    width="100%"
+                                    rel="0"
+                                    start="0"
+                                    autoplay="0">
+                            </google-youtube>
+                            <!-- <ul>
+                              <li>
+                                <label>[[videoTime]]</label>
+                                <iron-icon icon="icons:query-builder"></iron-icon>
+                              </li>
+                              <li>
+                                <label>[[videoViews]]</label>
+                                <iron-icon icon="icons:visibility"></iron-icon>
+                              </li>
+                              <li>
+                                <label>[[videoLikes]]</label>
+                                <iron-icon icon="icons:thumb-up"></iron-icon>
+                              </li>
+                              <li>
+                                <label>[[videoUnlikes]]</label>
+                                <iron-icon icon="icons:thumb-down"></iron-icon>
+                              </li>
+                              <li>
+                                <label>[[videoShares]]</label>
+                                <iron-icon icon="icons:more-vert"></iron-icon>
+                              </li>
+                            </ul> -->
+                        </div>
+                        <div class="self-end">
+                            <label>[[videoTitle]]</label>
+                            <span class="flex"></span>
+                            <span>
+                                <label>[[videoTime]]</label>
+                                <iron-icon icon="query-builder"></iron-icon>
+                            </span>
 
+                        </div>
                     </div>
-                </div>
-            </iron-flex-layout>
-        </paper-card>
+                </iron-flex-layout>
+            </paper-card>
+        </template>
+
     </template>
 
     <script>
@@ -152,6 +154,10 @@
                     type: String,
                     value: "Channel Name"
                 }
+            },
+
+            ready: function(){
+                console.log('video-card');
             }
         });
 

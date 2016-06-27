@@ -9,6 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
 
 <dom-module id="channel-data">
 
@@ -17,9 +19,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-ajax
                     auto
                     url="{{url}}"
-                    params='{{parameters}}'
+                    params="{{params}}"
                     handle-as="json"
-                    last-response="[[response]]"
+                    last-response="{{response}}"
                     debounce-duration="300"></iron-ajax>
 
         </template>
@@ -45,7 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 params : {
                     type: Object,
-                    value: {"part": "contentDetails", "forUsername": "bonimba33733", "key": "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"}
+                    value: {"part": "snippet,contentDetails", "forUsername": "bonimba33733", "maxResults": "50", "key": "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"}
                 },
 
                 youtubeKey: {
@@ -56,12 +58,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 response: {
                     type: Object,
                     value: {},
-                    notify: true
+                    notify: true,
+                    reflectToAttribute: true
                 }
             },
 
             computeUrl: function(base, specific){
                 return [base, specific].join("/");
+            },
+
+            ready: function(){
+                console.log('channel-data');
             }
 
         });

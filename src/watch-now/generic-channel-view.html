@@ -33,7 +33,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         Polymer({
 
-            is: 'generic-channel-view'
+            is: 'generic-channel-view',
+
+            ready: function(){
+                console.log('video-card');
+            }
 
         });
 
