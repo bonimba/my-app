@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../cards/video-card.html">
 <link rel="import" href="../data/channel-data.html">
 
@@ -8,23 +9,30 @@
         <style>
             :host {
                 display: block;
-                box-sizing: border-box;
+            }
+            video-card{
+                width:100%;
             }
 
         </style>
 
         <template is="dom-bind">
-            <channel-data
-                specific="channels"
-                response="{{data}}"
-            ></channel-data>
+            <iron-ajax
+                    auto
+                    url="https://www.googleapis.com/youtube/v3/activities"
+                    params='{"part": "snippet,contentDetails", "channelId": "UCnUYZLuoy1rq1aVMwx4aTzw", "maxResults": "50",  "key": "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"}'
+                    handle-as="json"
+                    last-response="{{data}}"
+                    debounce-duration="300"></iron-ajax>
 
             <iron-list items="{{data.items}}" as="item">
-                <video-card
-                    video-id=[[item.contentDetails.playlistItem.resourceId.videoId]]
-                    videoTitle=[[item.title]]
-                    channelName=[[item.channelTitle]]
-                ></video-card>
+                <template>
+                    <video-card
+                            video-id="[[item.contentDetails.playlistItem.resourceId.videoId]]"
+                            video-title="[[item.snippet.title]]"
+                            channel-name="[[item.channelTitle]]"
+                    ></video-card>
+                </template>
             </iron-list>
         </template>
 
@@ -36,18 +44,7 @@
         Polymer({
             is: 'video-list',
             properties:{
-                specific: {
-                    type: String,
-                    value: 'channels'
-                },
-                params: {
-                    type: Object,
-                    value: {}
-                }
-            },
 
-            ready: function(){
-                console.log('video-list');
             }
         });
 

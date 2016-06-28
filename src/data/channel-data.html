@@ -18,10 +18,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template is="dom-bind">
             <iron-ajax
                     auto
-                    url="{{url}}"
-                    params="{{params}}"
+                    url="https://www.googleapis.com/youtube/v3/channels"
+                    params='{"part": "snippet,contentDetails", "forUsername": "bonimba33733", "maxResults": "50", "key": "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"}'
                     handle-as="json"
-                    last-response="{{response}}"
+                    on-response="{{handleResponse}}"
                     debounce-duration="300"></iron-ajax>
 
         </template>
@@ -60,15 +60,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     value: {},
                     notify: true,
                     reflectToAttribute: true
+                },
+
+                handleResponse: {
+                    value: 'handleResponse'
                 }
             },
 
             computeUrl: function(base, specific){
                 return [base, specific].join("/");
-            },
-
-            ready: function(){
-                console.log('channel-data');
             }
 
         });
