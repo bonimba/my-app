@@ -8,7 +8,7 @@
         <iron-ajax
                 auto
                 url="[[url]]"
-                params='{{parameters}}'
+                params='[[parameters]]'
                 handle-as="json"
                 last-response="{{response}}"
                 debounce-duration="300"></iron-ajax>
@@ -19,44 +19,47 @@
             is: 'youtube-data',
             properties: {
                 base : {
-                    type: string,
+                    type: String,
                     value: "https://www.googleapis.com/youtube/v3"
                 },
                 specific: {
-                    type: string,
+                    type: String,
                     value: 'channels'
                 },
                 url: {
-                    type: string,
-                    computed: 'computeUrl'
+                    type: String,
+                    computed: 'computeUrl(base, specific)'
                 },
                 params : {
-                    type: string,
-                    value: '"part: contentDetails", "forUsername": "bonimba33733"'
+                    type: Object,
+                    value: {"part": "contentDetails", "forUsername": "bonimba33733"}
                 },
 
                 youtubeKey: {
-                    type: string,
-                    value: '"key": "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"'
+                    type: String,
+                    value: "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"
                 },
 
                 parameters: {
-                    type: string,
-                    computed: 'computeParameters'
+                    type: Object,
+                    computed: 'computeParameters(params, youtubeKey)'
                 },
                 response: {
                     type: Object,
                     value: {},
-                    notify: true
+                    notify: true,
+                    reflectToAttribute: true
                 }
             },
 
-            computeUrl: function(base, specific){
+            computeUrl(base, specific){
                 return [base, specific].join("/");
             },
 
-            computeParameters: function(params, youtubeKey){
-                return Object.assign({}, params, youtubeKey);
+            computeParameters(params, youtubeKey){
+                var parameters = params;
+                parameters.key = youtubeKey;
+                return parameters;
             }
 
         });

@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../cards/video-card.html">
+<link rel="import" href="../data/highlights-data.html">
 <link rel="import" href="../data/channel-data.html">
 
 <dom-module id="video-list">
@@ -9,24 +9,28 @@
         <style>
             :host {
                 display: block;
+                box-sizing: border-box;
             }
-            video-card{
-                width:100%;
-            }
-
         </style>
+            <template is="dom-if" if="[[_isChannel(type)]]">
+                <channel-data
+                    response="{{data}}"></channel-data>
+            </template>
 
-        <template is="dom-bind">
-            <iron-ajax
-                    auto
-                    url="https://www.googleapis.com/youtube/v3/activities"
-                    params='{"part": "snippet,contentDetails", "channelId": "UCnUYZLuoy1rq1aVMwx4aTzw", "maxResults": "50",  "key": "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"}'
-                    handle-as="json"
-                    last-response="{{data}}"
-                    debounce-duration="300"></iron-ajax>
+            <template is="dom-if" if="[[_isHighlight(type)]]">
+                <highlights-data
+                    response="{{data}}"></highlights-data>
+            </template>
 
-            <iron-list items="{{data.items}}" as="item">
-                <template>
+            <iron-list items="[[data.items]]" as="item">
+                <template is="dom-if" if="[[_isChannel(type)]]">
+                    <video-card
+                            video-id="[[item.contentDetails.playlistItem.resourceId.videoId]]"
+                            video-title="[[item.snippet.title]]"
+                            channel-name="[[item.channelTitle]]"
+                    ></video-card>
+                </template>
+                <template is="dom-if" if="[[_isHighlight(type)]]">
                     <video-card
                             video-id="[[item.contentDetails.playlistItem.resourceId.videoId]]"
                             video-title="[[item.snippet.title]]"
@@ -34,7 +38,6 @@
                     ></video-card>
                 </template>
             </iron-list>
-        </template>
 
     </template>
 
@@ -44,7 +47,17 @@
         Polymer({
             is: 'video-list',
             properties:{
+                type:{
+                    type: String,
+                    value: "channel"
+                }
+            },
+            _isChannel(type){
+                return type === "channel";
+            },
 
+            _isHighlight(type){
+                return type === "highlight";
             }
         });
 
