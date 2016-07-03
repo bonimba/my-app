@@ -22,7 +22,9 @@
     "google-youtube": "GoogleWebComponents/google-youtube#^1.2.1",
     "iron-list": "PolymerElements/iron-list#^1.3.4",
     "paper-card": "PolymerElements/paper-card#^1.1.1",
-    "google-signin": "GoogleWebComponents/google-signin#^1.3.6"
+    "google-signin": "GoogleWebComponents/google-signin#^1.3.6",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.0.4",
+    "google-apis": "GoogleWebComponents/google-apis#^1.1.5"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
