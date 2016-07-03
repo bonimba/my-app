@@ -1,0 +1,45 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
+
+<dom-module id="signin-data">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+        </style>
+
+        <google-signin>Sing In to YouTube</google-signin>
+        <google-signin-aware
+            scope="[[scope]]"
+            openid-prompt="[[prompt]]"
+            offline="false"
+            signedIn="false"
+            isAuthorized="false"
+            needAdditionalAuth="true"
+
+        ></google-signin-aware>
+
+    </template>
+    <script>
+        Polymer({
+            is: "signin-data",
+            properties: {
+                scope:{
+                    type: String,
+                    value: 'https://www.googleapis.com/auth/youtube',
+                    readOnly: true
+                },
+                prompt: {
+                    type: String,
+                    value: 'select_account',
+                    readOnly: true
+                }
+
+
+            }
+        });
+    </script>
+</dom-module>
