@@ -1,0 +1,37 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../cards/channel-card.html">
+<link rel="import" href="../data/subscriptions-data.html">
+
+<dom-module id="subscription-list">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+        </style>
+            <subscriptions-data
+                    response="{{data}}"></subscriptions-data>
+
+        <iron-list items="[[data.items]]" as="item">
+                <channel-card
+                        channel-name="[[item.channelTitle]]"
+                ></channel-card>
+        </iron-list>
+
+    </template>
+
+
+    <script>
+
+        Polymer({
+            is: 'subscription-list',
+            properties:{
+
+            }
+       });
+
+    </script>
+
+</dom-module>
