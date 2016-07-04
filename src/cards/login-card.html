@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-signin/google-signin.html">
+
+
+<dom-module id="login-card" >
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+        </style>
+
+
+        <google-signin
+                id="signinElement"
+                brand="google"
+                client-id="[[id]]"
+                scopes="{{scopes}}"
+                on-google-signin-success="signInSuccess"
+                on-google-signed-out="signedOut"></google-signin>
+
+        <template is="dom-if" if="{{!signedIn}}">
+            <div class="customBtn signIn" on-click="{{signIn}}">
+                <span class="icon"></span>
+                <span class="buttonText">Sign in with Google</span>
+            </div>
+        </template>
+        <template is="dom-if" if="{{signedIn}}">
+            <div class="customBtn signOut" on-click="{{signOut}}">
+                <span class="icon"></span>
+                <span class="buttonText">Sign out</span>
+            </div>
+        </template>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'login-card',
+
+            properties: {
+                id: {
+                    type: String,
+                    value: "288236233563-3d2recbph673vlbtbihe2ii4dbhbpif7.apps.googleusercontent.com"
+                },
+                scopes: {
+                    type: String,
+                    value: 'https://www.googleapis.com/auth/youtube'
+                },
+                apiKey: 'AIzaSyA8gl3935bbNx_UEjAS0QJV7EZt2qY7QNY',
+                signedIn:{
+                    type: Boolean,
+                    value: false
+                }
+            },
+
+            signInSuccess() {
+                this.signedIn = true;
+            },
+
+            signedOut() {
+                this.signedIn = false;
+            },
+
+            signIn() {
+                this.$.signinElement.signIn();
+            },
+
+            signOut() {
+                this.$.signinElement.signOut();
+            }
+
+        });
+    </script>
+
+</dom-module>

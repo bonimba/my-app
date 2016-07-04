@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
+<link rel="import" href="../../bower_components/google-apis/google-client-loader.html">
 
 <dom-module id="signin-data">
     <template>
@@ -11,22 +11,38 @@
             }
         </style>
 
-        <google-signin>Sing In to YouTube</google-signin>
+        <google-client-loader id="plus"
+            on-js-api-load="{{displayProfile}}"></google-client-loader>
+
         <google-signin-aware
+            client-id="[[clientId]]"
             scope="[[scope]]"
             openid-prompt="[[prompt]]"
-            offline="false"
-            signedIn="false"
-            isAuthorized="false"
             needAdditionalAuth="true"
-
+            on-google-signin-aware-success="signIn"
+            on-google-signin-aware-error="signOut"
+            on-google-signin-aware-signed-out="signOut"
         ></google-signin-aware>
+
+        <div>
+            <template is="dom-if" if="{{signedIn}}">
+                Signed in as <b>{{profile.displayName}}</b> <a href="{{profile.url}}"><img src="{{profile.image.url}}"></a>
+            </template>
+            <template is="dom-if" if="{{!signedIn}}">
+                Not signed in!
+            </template>
+        </div>
 
     </template>
     <script>
         Polymer({
             is: "signin-data",
             properties: {
+                clientId:{
+                    type: String,
+                    value: "288236233563-3d2recbph673vlbtbihe2ii4dbhbpif7.apps.googleusercontent.com",
+                    readOnly: true
+                },
                 scope:{
                     type: String,
                     value: 'https://www.googleapis.com/auth/youtube',
@@ -36,9 +52,44 @@
                     type: String,
                     value: 'select_account',
                     readOnly: true
+                },
+
+                signedIn: {
+                    value: false
+                },
+
+                profile:{
+                    type: Object,
+                    value: {},
+                    notify: true,
+                    reflectToAttribute: true
+                },
+                accessToken:{
+                    type: String,
+                    value: ''
                 }
 
+            },
 
+            signIn(resp) {
+                this.signedIn = true;
+                this.accessToken = resp.detail.access_token;
+                this.displayProfile();
+            },
+            signOut(resp) {
+                this.profile = null;
+                this.signedIn = false;
+            },
+
+            displayProfile() {
+                if (this.signedIn && this.$.plus.auth) {
+                    var request = this.$.plus.auth.get({"userId": "me"});
+                    request.execute(function (resp) {
+                        this.profile = resp;
+                        console.log("profile");
+                        console.log(this.profile);
+                    }.bind(this));
+                }
             }
         });
     </script>
