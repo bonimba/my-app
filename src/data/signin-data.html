@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../cards/user-card.html">
 
 <dom-module id="signin-data">
     <template>
@@ -29,14 +30,14 @@
                     params='[[params]]'
                     requestHeaders="[[headers]]"
                     handle-as="json"
-                    last-response="{{profile}}"
+                    on-response="parseProfile"
             ></iron-ajax>
-            <template is="dom-repeat" items="{{profile.items}}" as="item">
-                <p>[[item.id]]</p>
-                <p>[[item.snippet.title]]</p>
-                <p>[[item.snippet.customUrl]]</p>
-                <img src="[[item.snippet.thumbnails.default.url]]"/>
-            </template>
+           <!-- <template is="dom-repeat" items="{{profile.items}}" as="item">
+                <user-card
+                    image-url="[[item.snippet.thumbnails.default.url]]"
+                    name="[[item.snippet.title]]"
+                ></user-card>
+            </template> -->
         </template>
 
 
@@ -115,8 +116,10 @@
                  return {Authorization: "Bearer "+accessToken};
             },
 
-            printProfile(resp){
-                console.log(resp);
+            parseProfile(resp){
+               if(resp){
+                   this.profile = resp.detail.response.items[0];
+               }
             }
         });
     </script>
