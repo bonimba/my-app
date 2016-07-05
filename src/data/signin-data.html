@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
-<link rel="import" href="../../bower_components/google-apis/google-client-loader.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="signin-data">
     <template>
@@ -11,30 +11,40 @@
             }
         </style>
 
-        <google-client-loader id="plus"
-            on-js-api-load="{{displayProfile}}"></google-client-loader>
-
         <google-signin-aware
             client-id="[[clientId]]"
             scope="[[scope]]"
             openid-prompt="[[prompt]]"
-            needAdditionalAuth="true"
+            need-additional-auth="true"
             on-google-signin-aware-success="signIn"
             on-google-signin-aware-error="signOut"
             on-google-signin-aware-signed-out="signOut"
         ></google-signin-aware>
 
-        <div>
-            <template is="dom-if" if="{{signedIn}}">
-                Signed in as <b>{{profile.displayName}}</b> <a href="{{profile.url}}"><img src="{{profile.image.url}}"></a>
+
+        <template is="dom-if" if="{{signedIn}}">
+            <iron-ajax
+                    auto
+                    url="https://www.googleapis.com/youtube/v3/channels"
+                    params='[[params]]'
+                    requestHeaders="[[headers]]"
+                    handle-as="json"
+                    last-response="{{profile}}"
+            ></iron-ajax>
+            <template is="dom-repeat" items="{{profile.items}}" as="item">
+                <p>[[item.id]]</p>
+                <p>[[item.snippet.title]]</p>
+                <p>[[item.snippet.customUrl]]</p>
+                <img src="[[item.snippet.thumbnails.default.url]]"/>
             </template>
-            <template is="dom-if" if="{{!signedIn}}">
-                Not signed in!
-            </template>
-        </div>
+        </template>
+
 
     </template>
     <script>
+        /** L'idea [ di passare profile ad un altro component che andra a prendere i nome
+        *
+        * */
         Polymer({
             is: "signin-data",
             properties: {
@@ -66,7 +76,22 @@
                 },
                 accessToken:{
                     type: String,
-                    value: ''
+                    value: '',
+                    notify: true,
+                    reflectToAttribute: true
+                },
+
+                params:{
+                    type: Object,
+                    value: {"part":"snippet", "mine": true, "maxResults": 1}
+                },
+
+                parameters:{
+                    computed: 'computedParameters(params, accessToken)'
+                },
+
+                headers:{
+                    computed: 'computeHeader(accessToken)'
                 }
 
             },
@@ -74,22 +99,24 @@
             signIn(resp) {
                 this.signedIn = true;
                 this.accessToken = resp.detail.access_token;
-                this.displayProfile();
             },
-            signOut(resp) {
+            signOut() {
                 this.profile = null;
                 this.signedIn = false;
             },
 
-            displayProfile() {
-                if (this.signedIn && this.$.plus.auth) {
-                    var request = this.$.plus.auth.get({"userId": "me"});
-                    request.execute(function (resp) {
-                        this.profile = resp;
-                        console.log("profile");
-                        console.log(this.profile);
-                    }.bind(this));
-                }
+            computedParameters(params, accessToken){
+                var parameters = params;
+                parameters.access_token = accessToken;
+                return parameters;
+            },
+
+            computeHeader(accessToken){
+                 return {Authorization: "Bearer "+accessToken};
+            },
+
+            printProfile(resp){
+                console.log(resp);
             }
         });
     </script>
