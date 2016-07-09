@@ -20,7 +20,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="my-icons.html">
+<link rel="import" href="cards/login-card.html">
+<link rel="import" href="cards/user-card.html">
+
 
 <dom-module id="my-app">
 
@@ -74,16 +78,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <app-drawer-layout fullbleed>
+    <template is="dom-if" if="[[!signedIn]]">
+      <login-card signed-in="{{signedIn}}"></login-card>
+    </template>
 
+    <app-drawer-layout fullbleed>
       <!-- Drawer content -->
       <app-drawer>
         <app-toolbar id="menu">
-          <user-card
-            image-url="[[profile.snippet.thumbnails.default.url]]"
-            name="[[profile.snippet.title]]"
-          >
-          </user-card>
+          <user-card></user-card>
         </app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="watch-now" href="/watch-now">
@@ -108,7 +111,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
-
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
@@ -126,7 +128,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <watch-now-view name="watch-now"></watch-now-view>
           <my-subscriptions-view name="my-subscriptions"></my-subscriptions-view>
           <explore-view name="explore"></explore-view>
-          <settings-view name="settings" profile="{{profile}}"></settings-view>
+          <settings-view name="settings"></settings-view>
         </iron-pages>
 
       </app-header-layout>
@@ -149,6 +151,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true,
           observer: '_pageChanged'
         },
+
+        signedIn:{
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        }
 
       },
 

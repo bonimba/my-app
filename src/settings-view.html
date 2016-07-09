@@ -23,9 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
     </style>
-    <signin-data
-      profile="{{profile}}"
-    ></signin-data>
+
     <login-card></login-card>
 
   </template>
@@ -39,6 +37,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         profile:{
           type: Object,
           value: {},
+          notify: true,
+          reflectToAttribute: true
+        },
+
+        accessToken:{
+          type: String,
+          value: '',
           notify: true,
           reflectToAttribute: true
         }

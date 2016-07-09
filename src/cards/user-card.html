@@ -1,5 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
 
 
 <dom-module id="user-card">
@@ -9,18 +12,68 @@
                 display: block;
                 box-sizing: border-box;
             }
+
+            #image{
+                border-radius: 50%;
+            }
         </style>
 
-    <paper-card>
-        User Card
-    </paper-card>
+        <iron-localstorage name="accessToken" value="{{accessToken}}"></iron-localstorage>
+
+        <template is="dom-if" if="[[accessToken]]">
+            <iron-ajax
+                    auto
+                    url="https://www.googleapis.com/youtube/v3/channels"
+                    params='[[params]]'
+                    request-headers="[[headers]]"
+                    handle-as="json"
+                    on-response="parseProfile"
+            ></iron-ajax>
+            <template is="dom-repeat" items="{{profile.items}}" as="item">
+                <iron-image id="image" src="[[item.snippet.thumbnails.default.url]]"></iron-image>
+                <label for="image">[[item.snippet.title]]</label>
+            </template>
+        </template>
 
 
     </template>
     <script>
         Polymer({
             is: "user-card",
-            properties: {}
+            properties: {
+                accessToken:{
+                    type: String,
+                    value: ''
+                },
+                params:{
+                    type: Object,
+                    value: {"part":"snippet", "mine": true, "maxResults": 1}
+                },
+
+                parameters:{
+                    computed: 'computedParameters(params, accessToken)'
+                },
+
+                headers:{
+                    computed: 'computeHeader(accessToken)'
+                }
+            },
+
+            computedParameters(params, accessToken){
+                var parameters = params;
+                parameters.access_token = accessToken;
+                return parameters;
+            },
+
+            computeHeader(accessToken){
+                return {Authorization: "Bearer "+accessToken};
+            },
+
+            parseProfile(resp){
+                if(resp){
+                    this.profile = resp.detail.response.items[0];
+                }
+            }
         });
     </script>
 </dom-module>

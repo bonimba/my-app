@@ -10,6 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 
@@ -48,7 +50,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </app-header>
 
     <iron-pages role="main" selected="[[tab]]" attr-for-selected="name">
-      <channels-view name="channels"></channels-view>
+      <channels-view name="channels" accessToken="[[accessToken]]"></channels-view>
       <searches-view name="searches"></searches-view>
       <tabs-view name="tabs"></tabs-view>
     </iron-pages>
@@ -66,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         tab: {
           type: String,
-          value: "channels",
+          value: "tabs",
           reflectToAttribute: true,
           observer: '_tabChanged'
         }
@@ -78,13 +80,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       _routeTabChanged: function(tab) {
-        this.tab = tab || "channels";
+        this.tab = tab || "tabs";
       },
 
       _tabChanged: function(tab) {
         // load page import on demand.
         this.importHref(
-              this.resolveUrl('my-subscriptions/' + tab + '-view.html'), null, null, true);
+              this.resolveUrl('subscriptions/' + tab + '-view.html'), null, null, true);
       }
     });
 

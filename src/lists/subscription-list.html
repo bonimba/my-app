@@ -11,15 +11,24 @@
                 box-sizing: border-box;
             }
         </style>
-            <subscriptions-data
-                    response="{{data}}"></subscriptions-data>
 
-        <iron-list items="[[data.items]]" as="item">
+        <template is="dom-if" if="[[accessToken]] !== 'false'">
+            <subscriptions-data
+                    response="{{data}}"
+                    accessToken="[[accessToken]]"
+            ></subscriptions-data>
+
+            <iron-list items="[[data.items]]" as="item">
                 <channel-card
                         channel-avatar="[[item.channelThumb]]"
                         channel-name="[[item.channelTitle]]"
                 ></channel-card>
-        </iron-list>
+            </iron-list>
+        </template>
+        <template is="dom-if" if="[[accessToken === 'false']]">
+            <div><p>You need to log in to access this section</p></div>
+        </template>
+
 
     </template>
 
@@ -29,7 +38,10 @@
         Polymer({
             is: 'subscription-list',
             properties:{
-
+                accessToken:{
+                    type: String,
+                    value: 'false'
+                }
             }
        });
 
