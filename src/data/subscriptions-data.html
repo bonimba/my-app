@@ -9,17 +9,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../data/youtube-data.html">
-
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="subscriptions-data">
 
     <template>
-        <youtube-data
-                specific="[[specific]]"
-                params="[[params]]"
-                response="{{response}}"
-        ></youtube-data>
+        <iron-ajax
+                auto
+                url="[[url]]"
+                params='[[params]]'
+                request-headers="[[headers]]"
+                handle-as="json"
+                last-response="{{response}}"
+        ></iron-ajax>
     </template>
 
     <script>
@@ -29,20 +31,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             is: 'subscriptions-data',
 
             properties: {
-                specific:{
+                url:{
                     type: String,
-                    value: 'subscriptions'
+                    value: "https://www.googleapis.com/youtube/v3/subscriptions",
+                    readOnly: true
                 },
                 params: {
                     type: Object,
-                    value: {"part": "snippet", "mine": true, "maxResults": 50, "order": "alphabetical"}
+                    value: {"part": "snippet", "mine": true, "maxResults": 50, "order": "alphabetical"},
+                    readOnly: true
                 },
                 response: {
                     type: Object,
                     value: {},
                     notify: true,
                     reflectToAttribute: true
+                },
+                headers:{
+                    computed: 'computeHeader(accessToken)'
+                },
+                accessToken:{
+                    type: String,
+                    value: ''
                 }
+            },
+
+            computeHeader(accessToken){
+                return {Authorization: "Bearer "+accessToken};
             }
         });
 
