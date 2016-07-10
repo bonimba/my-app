@@ -23,7 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         </style>
 
-        <subscription-list></subscription-list>
+        <subscription-list signed-in="[[signedIn]]"></subscription-list>
 
     </template>
 
@@ -31,7 +31,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         Polymer({
 
-            is: 'channels-view'
+            is: 'channels-view',
+
+            properties:{
+                signedIn:{
+                    type: Boolean,
+                    value: false
+                }
+            }
 
         });
 

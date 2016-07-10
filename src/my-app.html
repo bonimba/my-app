@@ -126,7 +126,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
           <watch-now-view name="watch-now"></watch-now-view>
-          <my-subscriptions-view name="my-subscriptions"></my-subscriptions-view>
+          <my-subscriptions-view name="my-subscriptions" signed-in="[[signedIn]]"></my-subscriptions-view>
           <explore-view name="explore"></explore-view>
           <settings-view name="settings"></settings-view>
         </iron-pages>

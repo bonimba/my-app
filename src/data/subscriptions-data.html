@@ -18,7 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 auto
                 url="[[url]]"
                 params='[[params]]'
-                request-headers="[[headers]]"
+                headers="[[headers]]"
                 handle-as="json"
                 last-response="{{response}}"
         ></iron-ajax>
@@ -57,7 +57,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
 
             computeHeader(accessToken){
-                return {Authorization: "Bearer "+accessToken};
+                return {"Authorization": "Bearer "+accessToken};
             }
         });
 

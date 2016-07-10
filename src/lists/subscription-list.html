@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../cards/channel-card.html">
 <link rel="import" href="../data/subscriptions-data.html">
 
@@ -12,26 +13,28 @@
             }
         </style>
 
-        <template is="dom-if" if="[[accessToken]] !== 'false'">
+        <template is="dom-if" if="[[signedIn]]">
+            <iron-localstorage name="accessToken" value="{{accessToken}}"></iron-localstorage>
             <subscriptions-data
                     response="{{data}}"
-                    accessToken="[[accessToken]]"
+                    access-token="[[accessToken]]"
             ></subscriptions-data>
 
             <iron-list items="[[data.items]]" as="item">
-                <channel-card
-                        channel-avatar="[[item.channelThumb]]"
-                        channel-name="[[item.channelTitle]]"
-                ></channel-card>
+                <template>
+                    <channel-card
+                            channel-avatar="[[item.snippet.thumbnails.default.url]]"
+                            channel-name="[[item.snippet.title]]"
+                    ></channel-card>
+                </template>
             </iron-list>
         </template>
-        <template is="dom-if" if="[[accessToken === 'false']]">
+        <template is="dom-if" if="[[!signedIn]]">
             <div><p>You need to log in to access this section</p></div>
         </template>
 
 
     </template>
-
 
     <script>
 
@@ -40,7 +43,11 @@
             properties:{
                 accessToken:{
                     type: String,
-                    value: 'false'
+                    value: ''
+                },
+                signedIn:{
+                    type: Boolean,
+                    value: false
                 }
             }
        });
