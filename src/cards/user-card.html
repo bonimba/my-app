@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
 
 
 <dom-module id="user-card">
@@ -11,16 +12,28 @@
             }
         </style>
 
-    <paper-card>
-        User Card
-    </paper-card>
-
+        <iron-image
+                style="width:50px; height:50px; background-color: lightgray; border-radius:50%"
+                sizing="contain"
+                preload
+                src="[[imageUrl]]"></iron-image>
+        <p>[[name]]</p>
 
     </template>
     <script>
         Polymer({
             is: "user-card",
-            properties: {}
+            properties: {
+                name:{
+                    type: String,
+                    value: ''
+                },
+                imageUrl:{
+                    type: String,
+                    value: ''
+                }
+
+            }
         });
     </script>
 </dom-module>
