@@ -1,0 +1,103 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+
+<dom-module id="channel-statistics">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+        </style>
+
+            <iron-localstorage name="accessToken" value="{{accessToken}}"></iron-localstorage>
+            <template is="dom-if" if="[[_videoAPIReady(accessToken, videoList)]]">
+                <iron-ajax
+                        auto
+                        url="https://www.googleapis.com/youtube/v3/videos"
+                        params='[[parameters]]'
+                        headers="[[headers]]"
+                        handle-as="json"
+                        last-response="{{statistics}}"
+                ></iron-ajax>
+            </template>
+
+    </template>
+    <script>
+        Polymer({
+            is: "channel-statistics",
+            properties: {
+                params:{
+                    type: Object,
+                    value:{"part": "statistics", "maxResults": 50}
+                },
+
+                accessToken:{
+                    type: String,
+                    value: ''
+                },
+
+                parameters:{
+                    computed: 'computedParameters(params, videoList)'
+                },
+
+                headers:{
+                    computed: 'computeHeader(accessToken)'
+                },
+
+                statistics:{
+                    type: Object,
+                    value: {},
+                    notify: true,
+                    reflectToAttribute: true,
+                    observer: '_parseStatistics'
+                },
+
+                videoList:{
+                    type: String,
+                    value: '',
+                    notify: true
+                }
+            },
+
+            computedParameters(params, videoList){
+                var parameters = params;
+                parameters.id = videoList.toString();
+                return parameters;
+            },
+
+            computeHeader(accessToken){
+                return {"Authorization": "Bearer "+ accessToken};
+            },
+
+            _videoAPIReady(accessToken, videoList){
+                return accessToken !== '' && videoList !== '';
+            },
+
+            _parseStatistics(statistics){
+                if(this.statistics && this.statistics.etag){
+                    var list = [];
+                    var stats = statistics.items.forEach(function(stat){
+
+                        var newObj = {
+                            id: stat.id,
+                            likes: stat.statistics.likeCount,
+                            dislikes: stat.statistics.dislikeCount,
+                            views: stat.statistics.viewCount,
+                            favourites: stat.statistics.favoriteCount,
+                            comments: stat.statistics.commentCount
+                        };
+
+                        list.push(newObj);
+
+                    });
+
+
+                    this.statistics = {items: list};
+                }
+
+            }
+        });
+    </script>
+</dom-module>
