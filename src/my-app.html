@@ -78,7 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <template is="dom-if" if="[[!signedIn]]">
+    <template is="dom-if" if="![[signedIn]]">
       <login-card signed-in="{{signedIn}}"></login-card>
     </template>
 

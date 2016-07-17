@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">s
 <link rel="import" href="../cards/user-card.html">
 
 <dom-module id="signin-data">
@@ -53,7 +52,7 @@
                 },
                 scope:{
                     type: String,
-                    value: 'https://www.googleapis.com/auth/youtube',
+                    value: 'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly',
                     readOnly: true
                 },
                 prompt: {
