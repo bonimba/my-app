@@ -15,7 +15,8 @@
         </style>
         <template is="dom-if" if="[[_isChannel(type)]]">
             <channel-data
-                response="{{data}}"></channel-data>
+                    username="[[username]]"
+                    response="{{data}}"></channel-data>
         </template>
 
         <template is="dom-if" if="[[_isHighlight(type)]]">

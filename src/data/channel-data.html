@@ -17,8 +17,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <template>
         <youtube-data
                 specific="[[specific]]"
-                params="[[params]]"
+                params="[[parameters]]"
                 response="{{response}}"
+                username="[[username]]"
         ></youtube-data>
     </template>
 
@@ -35,7 +36,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 params:{
                     type: Object,
-                    value: {"part": "contentDetails", "forUsername": "bonimba33733", "maxResults": "50"}
+                    value: {"part": "contentDetails", "maxResults": 50}
+                },
+
+                username:{
+                    type: String,
+                    value: "bonimba33733"
+                },
+                parameters:{
+                    type: Object,
+                    computed: 'computedParameters(params, username)'
                 },
                 response: {
                     type: Object,
@@ -43,6 +53,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     notify: true,
                     reflectToAttribute: true
                 }
+            },
+
+            computedParameters(params, username){
+                var parameters = params;
+                parameters.forUsername = username;
+                return parameters;
             }
 
         });

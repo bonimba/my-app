@@ -26,12 +26,12 @@
                         params='[[params]]'
                         headers="[[headers]]"
                         handle-as="json"
-                        last-response="{{profile}}"
+                        on-response="parseProfile"
                 ></iron-ajax>
-                <template is="dom-repeat" items="[[profile.items]]" as="item" >
-                    <iron-image id="image" src="[[item.snippet.thumbnails.default.url]]"></iron-image>
-                    <label for="image">[[item.snippet.title]]</label>
-                </template>
+
+                <iron-image id="image" src="[[profile.snippet.thumbnails.default.url]]"></iron-image>
+                <label for="image">[[profile.snippet.title]]</label>
+
             </template>
 
     </template>
@@ -59,6 +59,19 @@
                 signedIn:{
                     type: Boolean,
                     value: false
+                },
+
+                username:{
+                    type: String,
+                    value: 'bonimba33733',
+                    notify: true,
+                    reflectToAttribute: true
+                },
+
+                profile:{
+                    type: Object,
+                    value: null,
+                    notify: true
                 }
             },
 
@@ -75,6 +88,7 @@
             parseProfile(resp){
                 if(resp){
                     this.profile = resp.detail.response.items[0];
+                    this.username = this.profile.snippet.title;
                 }
             }
         });

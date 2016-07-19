@@ -86,7 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Drawer content -->
       <app-drawer>
         <app-toolbar id="menu">
-          <user-card signed-in="[[signedIn]]"></user-card>
+          <user-card signed-in="[[signedIn]]" username="{{username}}"></user-card>
         </app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="watch-now" href="/watch-now">
@@ -126,7 +126,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-          <watch-now-view name="watch-now"></watch-now-view>
+          <watch-now-view name="watch-now" username="[[username]]"></watch-now-view>
           <my-subscriptions-view name="my-subscriptions" signed-in="[[signedIn]]"></my-subscriptions-view>
           <explore-view name="explore"></explore-view>
           <settings-view name="settings"></settings-view>
