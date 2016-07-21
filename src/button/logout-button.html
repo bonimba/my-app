@@ -1,0 +1,31 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<dom-module id="logout-button">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+        </style>
+
+        <button is="" icon="close" on-tap="_logout">{content}</button>
+
+
+    </template>
+    <script>
+        Polymer({
+            is: 'logout-button',
+
+            properties: {},
+
+            _logout: function(){
+                localStorage.removeItem('accessToken');
+
+            }
+
+        });
+    </script>
+
+</dom-module>

@@ -1,7 +1,7 @@
 {
-  "name": "app-drawer-template",
+  "name": "youtuner",
   "authors": [
-    "The Polymer Authors"
+    "bonimba"
   ],
   "private": true,
   "dependencies": {
