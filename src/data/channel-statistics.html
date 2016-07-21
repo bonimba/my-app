@@ -61,21 +61,21 @@
                 }
             },
 
-            computedParameters(params, videoList){
+            computedParameters: function(params, videoList){
                 var parameters = params;
                 parameters.id = videoList.toString();
                 return parameters;
             },
 
-            computeHeader(accessToken){
+            computeHeader: function(accessToken){
                 return {"Authorization": "Bearer "+ accessToken};
             },
 
-            _videoAPIReady(accessToken, videoList){
+            _videoAPIReady: function(accessToken, videoList){
                 return accessToken !== '' && videoList !== '';
             },
 
-            _parseStatistics(statistics){
+            _parseStatistics: function(statistics){
                 if(this.statistics && this.statistics.etag){
                     var list = [];
                     var stats = statistics.items.forEach(function(stat){

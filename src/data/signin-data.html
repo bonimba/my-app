@@ -76,21 +76,21 @@
 
             },
 
-            signIn(resp) {
+            signIn: function(resp) {
                 this.signedIn = true;
                 this.accessToken = resp.detail.access_token;
             },
-            signOut() {
+            signOut: function() {
                 this.signedIn = false;
                 this.accessToken = null;
             },
 
-            signInSuccess() {
+            signInSuccess: function() {
                 this.signedIn = true;
                 this.domHost.$.dialog.close();
             },
 
-            signedOut() {
+            signedOut: function() {
                 this.signedIn = false;
             }
         });
