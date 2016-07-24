@@ -16,6 +16,10 @@
             #image{
                 border-radius: 50%;
             }
+
+            label{
+                font-size: large;
+            }
         </style>
 
             <template is="dom-if" if="[[signedIn]]">
@@ -30,6 +34,7 @@
                 ></iron-ajax>
 
                 <iron-image id="image" src="[[profile.snippet.thumbnails.default.url]]"></iron-image>
+                <br>
                 <label for="image">[[profile.snippet.title]]</label>
 
             </template>
