@@ -18,6 +18,32 @@
         paper-card{
             width:100%;
         }
+
+        paper-icon-button{
+            position: relative;
+            float: right;
+            padding: 10px;
+        }
+
+        #channel-icon, #channel-name{
+            position: relative;
+            float: left;
+            padding: 10px;
+        }
+
+        .self-end{
+            margin-top: 50px;
+        }
+
+        ul{
+            list-style: none;
+        }
+
+        ul li{
+            display: inline;
+            margin-right: 5%;
+        }
+
     </style>
 
     <template>
@@ -41,33 +67,31 @@
                             start="0"
                             autoplay="0">
                     </google-youtube>
-                    <ul>
-                      <li>
-                        <label>[[videoViews]]</label>
-                        <iron-icon icon="visibility"></iron-icon>
-                      </li>
-                      <li>
-                        <label>[[videoLikes]]</label>
-                        <iron-icon icon="thumb-up"></iron-icon>
-                      </li>
-                      <li>
-                        <label>[[videoDislikes]]</label>
-                        <iron-icon icon="thumb-down"></iron-icon>
-                      </li>
-                      <li>
-                        <label>[[videoShares]]</label>
-                        <iron-icon icon="share"></iron-icon>
-                      </li>
-                    </ul>
-                </div>
-                <div class="self-end">
-                    <label>[[videoTitle]]</label>
-                    <span class="flex"></span>
-                    <span>
-                        <label>[[videoTime]]</label>
-                        <iron-icon icon="query-builder"></iron-icon>
-                    </span>
-
+                    <div class="self-end">
+                        <label>[[videoTitle]]</label>
+                        <ul>
+                            <li>
+                                <label>[[videoViews]]</label>
+                                <iron-icon icon="visibility"></iron-icon>
+                            </li>
+                            <li>
+                                <label>[[videoLikes]]</label>
+                                <iron-icon icon="thumb-up"></iron-icon>
+                            </li>
+                            <li>
+                                <label>[[videoDislikes]]</label>
+                                <iron-icon icon="thumb-down"></iron-icon>
+                            </li>
+                            <!-- <li>
+                                <label>[[videoShares]]</label>
+                                <iron-icon icon="share"></iron-icon>
+                            </li> -->
+                            <li>
+                                <label>[[videoComments]]</label>
+                                <iron-icon icon="chat"></iron-icon>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </paper-card>
@@ -112,6 +136,10 @@
                 channelName: {
                     type: String,
                     value: "Channel Name"
+                },
+                videoComments: {
+                    type: String,
+                    value: "Comments"
                 }
             }
         });
