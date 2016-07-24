@@ -1,0 +1,57 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+
+<dom-module id="sort-button">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+
+            .mini{
+                position: relative;
+                right: -15px;
+                margin-bottom: 10px;
+            }
+        </style>
+        <template is="dom-if" if="[[showList]]">
+                <paper-fab mini class="mini" icon="sort-by-alpha" title="a-z" on-tap="sortBy"></paper-fab>
+                <paper-fab mini class="mini" icon="thumb-up" title="likes" on-tap="sortBy"></paper-fab>
+                <paper-fab mini class="mini" icon="thumb-down" title="dislikes" on-tap="sortBy"></paper-fab>
+                <paper-fab mini class="mini" icon="share" title="shares" on-tap="sortBy"></paper-fab>
+                <paper-fab mini class="mini" icon="visibility" title="views" on-tap="sortBy"></paper-fab>
+        </template>
+
+        <paper-fab icon="tune" title="sort" on-tap="_showSortList"></paper-fab>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'sort-button',
+
+            properties: {
+                showList:{
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                }
+            },
+
+            /*sortBy: function(type){
+                this.domHost._sortBy(type);
+            },*/
+
+            sortBy(e){
+                var type = e.target.$.icon._iconName;
+                this.domHost._sortBy(type);
+            },
+
+            _showSortList: function(){
+                this.showList = !this.showList;
+            }
+
+        });
+    </script>
+
+</dom-module>

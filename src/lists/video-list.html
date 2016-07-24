@@ -4,6 +4,8 @@
 <link rel="import" href="../data/highlights-data.html">
 <link rel="import" href="../data/channel-data.html">
 <link rel="import" href="../data/channel-statistics.html">
+<link rel="import" href="../button/sort-button.html">
+<link rel="import" href="../my-icons.html">
 
 <dom-module id="video-list">
     <template>
@@ -12,6 +14,13 @@
                 display: block;
                 box-sizing: border-box;
             }
+
+            sort-button{
+                position: fixed;
+                bottom: 25px;
+                right: 50px;
+            }
+
         </style>
         <template is="dom-if" if="[[_isChannel(type)]]">
             <channel-data
@@ -33,7 +42,7 @@
 
         <template is="dom-if" if="[[mergedData]]">
 
-            <iron-list items="[[mergedData.items]]" as="item">
+            <iron-list id="list" items="[[mergedData.items]]" as="item">
                 <template is="dom-if" if="[[_isChannel(type)]]">
                     <video-card
                             video-id="[[item.videoId]]"
@@ -55,6 +64,7 @@
                     ></video-card>
                 </template>
             </iron-list>
+            <sort-button></sort-button>
         </template>
 
     </template>
@@ -91,7 +101,8 @@
                 mergedData:{
                     type: Object,
                     value: null,
-                    notify: true
+                    notify: true,
+                    observer: 'updateList'
                 }
 
             },
@@ -160,7 +171,91 @@
                         }).join(', ');
                     }
                 }
+            },
+
+            _sortBy(type){
+                switch(type){
+                    case('sort-by-alpha'):
+                        this.sortByAlpha();
+                        break;
+                    case('thumb-up'):
+                        this.sortByLikes();
+                        break;
+                    case('thumb-down'):
+                        this.sortByDislikes();
+                        break;
+                    case('share'):
+                        break;
+                    case('comments'):
+                        break;
+                    case('views'):
+                        this.sortByViews();
+                        break;
+                    default:
+                        console.log('default');
+                }
+            },
+
+            sortByAlpha: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(a.videoTitle < b.videoTitle) return -1;
+                        if(a.videoTitle > b.videoTitle) return 1;
+                        return 0;
+                    });
+
+                    this.mergedData = {items: items};
+                }
+            },
+
+            sortByLikes: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(parseInt(a.statistics.likes) < parseInt(b.statistics.likes)) return 1;
+                        if(parseInt(a.statistics.likes) > parseInt(b.statistics.likes)) return -1;
+                        return 0;
+                    });
+
+                    //this.set('merged.items', items);
+                    this.mergedData = {items: items};
+                }
+            },
+
+            sortByDislikes: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(parseInt(a.statistics.dislikes) < parseInt(b.statistics.dislikes)) return 1;
+                        if(parseInt(a.statistics.dislikes) > parseInt(b.statistics.dislikes)) return -1;
+                        return 0;
+                    });
+
+                    this.mergedData = {items: items};
+                }
+            },
+
+            sortByViews: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(parseInt(a.statistics.views) < parseInt(b.statistics.views)) return 1;
+                        if(parseInt(a.statistics.views) > parseInt(b.statistics.views)) return -1;
+                        return 0;
+                    });
+
+                    this.mergedData = {items: items};
+
+                }
+            },
+
+            updateList: function(){
+                if(this.shadowRoot.querySelector('iron-list')){
+                this.shadowRoot.querySelector('iron-list').notifyResize();
             }
+        }
+
         });
 
     </script>
