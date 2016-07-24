@@ -95,19 +95,19 @@
                 }
 
             },
-            _isChannel(type){
+            _isChannel: function(type){
                 return type === "channel";
             },
 
-            _isHighlight(type){
+            _isHighlight: function(type){
                 return type === "highlight";
             },
 
-            _isVideoList(){
+            _isVideoList: function(){
                 return this.videoList !== '';
             },
 
-            _mergeData(){
+            _mergeData: function(){
                 var that = this;
                 if((this.statistics && !this.statistics.etag) && this.data){
                     this.statistics.items.forEach(function(stat){
