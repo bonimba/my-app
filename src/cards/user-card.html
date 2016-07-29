@@ -80,17 +80,17 @@
                 }
             },
 
-            computedParameters(params, accessToken){
+            computedParameters: function(params, accessToken){
                 var parameters = params;
                 parameters.access_token = accessToken;
                 return parameters;
             },
 
-            computeHeader(accessToken){
+            computeHeader: function(accessToken){
                 return {"Authorization": "Bearer "+ accessToken};
             },
 
-            parseProfile(resp){
+            parseProfile: function(resp){
                 if(resp){
                     this.profile = resp.detail.response.items[0];
                     this.username = this.profile.snippet.title;
