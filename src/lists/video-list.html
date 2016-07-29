@@ -175,7 +175,7 @@
                 }
             },
 
-            _sortBy(type){
+            _sortBy: function(type){
                 switch(type){
                     case('sort-by-alpha'):
                         this.sortByAlpha();
@@ -192,7 +192,7 @@
                     case('chat'):
                         this.sortByComments();
                         break;
-                    case('views'):
+                    case('visibility'):
                         this.sortByViews();
                         break;
                     default:
