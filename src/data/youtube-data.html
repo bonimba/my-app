@@ -1,19 +1,30 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">s
 
 <dom-module id="youtube-data">
 
     <template>
-        <iron-ajax
-                auto
-                url="[[url]]"
-                params='[[parameters]]'
-                handle-as="json"
-                last-response="{{response}}"
-                debounce-duration="300"></iron-ajax>
+        <template is="dom-if" if="[[signedIn]]">
+            <iron-localstorage name="accessToken"
+                               value="{{accessToken}}"
+            ></iron-localstorage>
+
+            <template is="dom-if" if="[[accessToken]]">
+                <iron-ajax
+                        auto
+                        url="[[url]]"
+                        params='[[computedParameters]]'
+                        handle-as="json"
+                        headers="[[headers]]"
+                        last-response="{{response}}"
+                ></iron-ajax>
+            </template>
+        </template>
+
 
     </template>
+
     <script>
         Polymer({
             is: 'youtube-data',
@@ -32,7 +43,7 @@
                 },
                 params : {
                     type: Object,
-                    value: {"part": "contentDetails", "forUsername": "bonimba33733"}
+                    value: {}
                 },
 
                 youtubeKey: {
@@ -40,7 +51,7 @@
                     value: "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"
                 },
 
-                parameters: {
+                computedParameters: {
                     type: Object,
                     computed: 'computeParameters(params, youtubeKey)'
                 },
@@ -49,16 +60,37 @@
                     value: {},
                     notify: true,
                     reflectToAttribute: true
+                },
+
+                headers:{
+                    computed: 'computeHeader(accessToken)'
+                },
+                accessToken:{
+                    type: String,
+                    value: ''
+                },
+
+                signedIn:{
+                    type: Boolean,
+                    value: false,
+                    notify: true
                 }
             },
 
-            computeUrl(base, specific){
+            computeHeader: function(accessToken){
+                if(accessToken)
+                return {"Authorization": "Bearer "+accessToken};
+                return '';
+            },
+
+            computeUrl: function(base, specific){
                 return [base, specific].join("/");
             },
 
-            computeParameters(params, youtubeKey){
+            computeParameters: function(params, youtubeKey){
                 var parameters = params;
                 parameters.key = youtubeKey;
+
                 return parameters;
             }
 

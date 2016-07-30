@@ -25,12 +25,15 @@
         <template is="dom-if" if="[[_isChannel(type)]]">
             <channel-data
                     username="[[username]]"
-                    response="{{data}}"></channel-data>
+                    response="{{data}}"
+                    signed-in="[[signedIn]]"></channel-data>
         </template>
 
         <template is="dom-if" if="[[_isHighlight(type)]]">
             <highlights-data
-                response="{{data}}"></highlights-data>
+                    channel-id="UCnUYZLuoy1rq1aVMwx4aTzw"
+                    response="{{data}}"
+                    signed-in="[[signedIn]]"></highlights-data>
         </template>
 
         <template is="dom-if" if="_isVideoList">
@@ -105,6 +108,11 @@
                     value: null,
                     notify: true,
                     observer: 'updateList'
+                },
+
+                signedIn:{
+                    type: Boolean,
+                    value: false
                 }
 
             },
@@ -222,7 +230,6 @@
                         return 0;
                     });
 
-                    //this.set('merged.items', items);
                     this.mergedData = {items: items};
                 }
             },

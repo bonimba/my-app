@@ -19,6 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             specific="[[specific]]"
             params="[[params]]"
             response="{{response}}"
+            signed-in="[[signedIn]]"
        ></youtube-data>
     </template>
 
@@ -29,19 +30,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             is: 'highlights-data',
 
             properties: {
-                specific:{
+                specific: {
                     type: String,
                     value: 'activities'
                 },
                 params: {
                     type: Object,
-                    value: {"part": "snippet,contentDetails", "channelId": "UCnUYZLuoy1rq1aVMwx4aTzw", "maxResults": "50"}
+                    value: {"part": "snippet, contentDetails", "maxResults": "50", "mine": true}
                 },
                 response: {
                     type: Object,
                     value: {},
                     notify: true,
                     reflectToAttribute: true
+                },
+
+                channelId: {
+                    type: String,
+                    value: ''
+                },
+
+                signedIn:{
+                    type: Boolean,
+                    value: false
                 }
             }
         });

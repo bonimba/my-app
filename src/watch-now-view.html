@@ -46,8 +46,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </app-header>
 
     <iron-pages role="main" selected="[[tab]]" attr-for-selected="name" autoselect>
-      <highlights-view name="highlights"></highlights-view>
-      <generic-channel-view name="generic-channel" username="[[username]]"></generic-channel-view>
+      <highlights-view name="highlights" signed-in="[[signedIn]]"></highlights-view>
+      <generic-channel-view name="generic-channel" signed-in="[[signedIn]]" username="[[username]]"></generic-channel-view>
       <generic-search-view name="generic-search"></generic-search-view>
     </iron-pages>
 
@@ -66,6 +66,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: "highlights",
           reflectToAttribute: true,
           observer: '_tabChanged'
+        },
+
+        signedIn:{
+          type: Boolean,
+          value: false
         }
 
       },

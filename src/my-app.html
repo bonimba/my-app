@@ -126,7 +126,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-          <watch-now-view name="watch-now" username="[[username]]"></watch-now-view>
+          <watch-now-view name="watch-now" signed-in="[[signedIn]]" username="[[username]]"></watch-now-view>
           <my-subscriptions-view name="my-subscriptions" signed-in="[[signedIn]]"></my-subscriptions-view>
           <explore-view name="explore"></explore-view>
           <settings-view name="settings"></settings-view>

@@ -47,8 +47,15 @@
                 },
                 signedIn:{
                     type: Boolean,
-                    value: false
+                    value: false,
+                    notify: true
                 }
+            },
+
+            ready: function(){
+               this.addEventListener('access', function (e) {
+                    this.signedIn = e;
+                })
             }
        });
 

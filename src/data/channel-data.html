@@ -19,7 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 specific="[[specific]]"
                 params="[[parameters]]"
                 response="{{response}}"
-                username="[[username]]"
+                signed-in="[[signedIn]]"
         ></youtube-data>
     </template>
 
@@ -52,6 +52,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     value: {},
                     notify: true,
                     reflectToAttribute: true
+                },
+                signedIn:{
+                    type: Boolean,
+                    value: false
                 }
             },
 
