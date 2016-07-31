@@ -9,12 +9,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../data/youtube-data.html">
 
 
 <dom-module id="channel-data">
 
     <template>
+
+        <template is="dom-if" if="_isChannel">
+            <iron-localstorage name="id" value="{{id}}"></iron-localstorage>
+        </template>
+
         <youtube-data
                 specific="[[specific]]"
                 params="[[parameters]]"
@@ -45,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 parameters:{
                     type: Object,
-                    computed: 'computedParameters(params, username)'
+                    computed: 'computedParameters(params, id)'
                 },
                 response: {
                     type: Object,
@@ -56,13 +62,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 signedIn:{
                     type: Boolean,
                     value: false
+                },
+
+                id:{
+                    type: String,
+                    value: '',
+                    notify: true
                 }
             },
 
-            computedParameters: function(params, username){
+            computedParameters: function(params, id){
                 var parameters = params;
-                parameters.forUsername = username;
+                parameters.id = id;
                 return parameters;
+            },
+
+            _isChannel(){
+                return this.specific === "channels";
             }
 
         });

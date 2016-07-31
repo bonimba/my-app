@@ -90,6 +90,8 @@
                 if(resp){
                     this.profile = resp.detail.response.items[0];
                     this.username = this.profile.snippet.title;
+                    var id = this.profile.id;
+                    localStorage.setItem('id', id);
                 }
             }
         });
