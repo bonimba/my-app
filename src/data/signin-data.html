@@ -14,7 +14,6 @@
             client-id="[[clientId]]"
             scopes="[[scope]]"
             openid-prompt="[[prompt]]"
-            request-visible-actions="{{requestVisibleActions}}"
             need-additional-auth="true"
             on-google-signin-aware-success="signIn"
             on-google-signin-aware-error="signOut"
@@ -30,17 +29,14 @@
             properties: {
                 scope:{
                     type: String,
-                    value: 'profile https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.force-ssl',
+                    value: 'profile https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.force-ssl',
                     readOnly: true
                 },
                 prompt: {
                     type: String,
                     value: 'select_account',
                     readOnly: true
-                },
-
-                requestVisibleActions: 'select_account'
-
+                }
             },
 
             signIn: function(resp) {

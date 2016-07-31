@@ -5,6 +5,7 @@
 <link rel="import" href="../data/channel-data.html">
 <link rel="import" href="../data/channel-statistics.html">
 <link rel="import" href="../button/sort-button.html">
+<link rel="import" href="../data/is-authorized.html">
 <link rel="import" href="../my-icons.html">
 
 <dom-module id="video-list">
@@ -22,6 +23,9 @@
             }
 
         </style>
+
+        <is-authorized signed-in="{{signedIn}}"></is-authorized>
+
         <template is="dom-if" if="[[_isChannel(type)]]">
             <channel-data
                     username="[[username]]"
