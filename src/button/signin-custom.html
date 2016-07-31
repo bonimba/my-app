@@ -95,7 +95,8 @@
                     type: Boolean,
                     value: false,
                     notify: true,
-                    reflectToAttribute: true
+                    reflectToAttribute: true,
+                    observer: '_isAuthorized'
                 }
             },
 
@@ -111,6 +112,10 @@
             signOut: function () {
                 this.$.signinElement.signOut();
                 localStorage.removeItem('accessToken');
+            },
+
+            _isAuthorized: function(){
+                this.fire('iron-signal', {name: 'authorized', data: this.signedIn});
             }
         });
     </script>

@@ -1,0 +1,33 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
+
+<dom-module id="is-authorized">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+        </style>
+
+        <iron-signals on-iron-signal-authorized="_isAuthorized" ></iron-signals>
+
+    </template>
+    <script>
+        Polymer({
+            is: "is-authorized",
+            properties: {
+                signedIn: {
+                    type: Boolean,
+                    value: false,
+                    notify: true,
+                    reflectToAttribute: true
+                }
+            },
+
+            _isAuthorized: function(e, detail, sender){
+                this.signedIn = detail;
+            }
+        });
+    </script>
+</dom-module>

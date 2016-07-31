@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
-
+<link rel="import" href="../data/is-authorized.html">
 
 <dom-module id="user-card">
     <template>
@@ -22,22 +22,24 @@
             }
         </style>
 
-            <template is="dom-if" if="[[signedIn]]">
-                <iron-localstorage name="accessToken" value="{{accessToken}}"></iron-localstorage>
-                <iron-ajax
-                        auto
-                        url="https://www.googleapis.com/youtube/v3/channels"
-                        params='[[params]]'
-                        headers="[[headers]]"
-                        handle-as="json"
-                        on-response="parseProfile"
-                ></iron-ajax>
+        <is-authorized signed-in="{{signedIn}}"></is-authorized>
 
-                <iron-image id="image" src="[[profile.snippet.thumbnails.default.url]]"></iron-image>
-                <br>
-                <label for="image">[[profile.snippet.title]]</label>
+        <template is="dom-if" if="[[signedIn]]">
+            <iron-localstorage name="accessToken" value="{{accessToken}}" ></iron-localstorage>
+            <iron-ajax
+                    auto
+                    url="https://www.googleapis.com/youtube/v3/channels"
+                    params='[[params]]'
+                    headers="[[headers]]"
+                    handle-as="json"
+                    on-response="parseProfile"
+            ></iron-ajax>
 
-            </template>
+            <iron-image id="image" src="[[profile.snippet.thumbnails.default.url]]"></iron-image>
+            <br>
+            <label for="image">[[profile.snippet.title]]</label>
+
+        </template>
 
     </template>
     <script>
@@ -46,7 +48,8 @@
             properties: {
                 accessToken:{
                     type: String,
-                    value: ''
+                    value: '',
+                    notify: true
                 },
                 params:{
                     type: Object,
@@ -60,19 +63,12 @@
                 headers:{
                     computed: 'computeHeader(accessToken)'
                 },
-
-                signedIn:{
-                    type: Boolean,
-                    value: false
-                },
-
                 username:{
                     type: String,
                     value: 'bonimba33733',
                     notify: true,
                     reflectToAttribute: true
                 },
-
                 profile:{
                     type: Object,
                     value: null,

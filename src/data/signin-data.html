@@ -44,11 +44,9 @@
             },
 
             signIn: function(resp) {
-                var expires_in = JSON.stringify(resp.detail.expires_in);
-                if(expires_in === "3600"){
-                    var accessToken = JSON.stringify(resp.detail.access_token);
-                    localStorage.setItem('accessToken', accessToken);
-                }
+                var accessToken = JSON.stringify(resp.detail.access_token);
+                accessToken && localStorage.setItem('accessToken', accessToken);
+
                 var expires = JSON.stringify(resp.detail.expires_at);
                 localStorage.setItem('expiresAt', expires);
                 this.domHost.$.dialog.close();
