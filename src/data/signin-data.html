@@ -1,7 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
-<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
-<link rel="import" href="../cards/user-card.html">
 
 <dom-module id="signin-data">
     <template>
@@ -12,31 +10,16 @@
             }
         </style>
 
-        <iron-localstorage name="accessToken"
-                           value="{{accessToken}}"
-        ></iron-localstorage>
-
-        <google-signin
-                id="signinElement"
-                brand="google"
-                raised="true"
-                theme="dark"
-                width="wide"
-                height="wide"
-                client-id="[[clientId]]"
-                scopes="[[scope]]"
-                on-google-signin-success="signInSuccess"
-                on-google-signed-out="signedOut"></google-signin>
-
-
-        <google-signin-aware
+       <google-signin-aware
             client-id="[[clientId]]"
-            scope="[[scope]]"
+            scopes="[[scope]]"
             openid-prompt="[[prompt]]"
+            request-visible-actions="{{requestVisibleActions}}"
             need-additional-auth="true"
             on-google-signin-aware-success="signIn"
             on-google-signin-aware-error="signOut"
             on-google-signin-aware-signed-out="signOut"
+            signed-in="{{signedIn}}"
         ></google-signin-aware>
 
 
@@ -45,11 +28,6 @@
         Polymer({
             is: "signin-data",
             properties: {
-                clientId:{
-                    type: String,
-                    value: "288236233563-3d2recbph673vlbtbihe2ii4dbhbpif7.apps.googleusercontent.com",
-                    readOnly: true
-                },
                 scope:{
                     type: String,
                     value: 'profile https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.force-ssl',
@@ -60,38 +38,24 @@
                     value: 'select_account',
                     readOnly: true
                 },
-                signedIn:{
-                    type: Boolean,
-                    value: false,
-                    notify: true,
-                    reflectToAttribute: true
-                },
 
-                accessToken:{
-                    type: String,
-                    value: '',
-                    notify: true,
-                    reflectToAttribute: true
-                }
+                requestVisibleActions: 'select_account'
 
             },
 
             signIn: function(resp) {
-                this.signedIn = true;
-                this.accessToken = resp.detail.access_token;
-            },
-            signOut: function() {
-                this.signedIn = false;
-                this.accessToken = null;
-            },
-
-            signInSuccess: function() {
-                //this.signedIn = true;
+                var expires_in = JSON.stringify(resp.detail.expires_in);
+                if(expires_in === "3600"){
+                    var accessToken = JSON.stringify(resp.detail.access_token);
+                    localStorage.setItem('accessToken', accessToken);
+                }
+                var expires = JSON.stringify(resp.detail.expires_at);
+                localStorage.setItem('expiresAt', expires);
                 this.domHost.$.dialog.close();
             },
-
-            signedOut: function() {
-                //this.signedIn = false;
+            signOut: function() {
+                this.accessToken = null;
+                localStorage.removeItem('accessToken');
             }
         });
     </script>

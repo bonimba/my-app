@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../my-icons.html">
+<link rel="import" href="../button/signin-custom.html">
 
 <dom-module id="logout-button">
     <template>
@@ -12,24 +13,14 @@
             }
         </style>
 
-        <paper-button on-tap="_logout">
-            <iron-icon icon="close"></iron-icon>
-            Logout
-        </paper-button>
-
-
+        <signin-custom id="custom" client-id="288236233563-3d2recbph673vlbtbihe2ii4dbhbpif7.apps.googleusercontent.com"></signin-custom>
 
     </template>
     <script>
         Polymer({
             is: 'logout-button',
 
-            properties: {},
-
-            _logout: function(){
-                localStorage.removeItem('accessToken');
-
-            }
+            properties: {}
 
         });
     </script>

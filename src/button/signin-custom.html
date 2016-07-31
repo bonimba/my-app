@@ -1,0 +1,117 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-signin/google-signin.html">
+
+<dom-module id="signin-custom">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+            google-signin {
+                display: none;
+            }
+            .customBtn {
+                display: inline-block;
+                border-radius: 5px;
+                white-space: nowrap;
+                cursor: pointer;
+                color: white;
+            }
+            .signIn {
+                background: #dd4b39;
+            }
+            .signIn:hover {
+                background: #e74b37;
+            }
+            .signOut {
+                background: #999;
+            }
+            .signOut:hover {
+                background: #aaa;
+            }
+            span.label {
+                font-weight: bold;
+            }
+            span.icon {
+                background: url('https://google-developers.appspot.com/+/images/branding/btn_red_32.png') transparent 5px 50% no-repeat;
+                display: inline-block;
+                vertical-align: middle;
+                width: 40px;
+                height: 35px;
+            }
+            .signIn span.icon {
+                border-right: #bb3f30 1px solid;
+            }
+            .signOut span.icon {
+                border-right: #888 1px solid;
+            }
+            span.buttonText {
+                display: inline-block;
+                vertical-align: middle;
+                padding-left: 35px;
+                padding-right: 35px;
+                font-size: 14px;
+                font-weight: bold;
+                font-family: 'Roboto',arial,sans-serif;
+            }
+        </style>
+
+        <google-signin
+                id="signinElement"
+                client-id="[[clientId]]"
+                scopes="[[scopes]]"
+                cookie-policy="{{cookiePolicy}}"
+                request-visible-actions="[[requestVisibleActions]]"
+                on-google-signin-success="signInSuccess"
+                on-google-signin-failure="signedOut"
+                on-google-signed-out="signedOut"
+                signed-in="{{signedIn}}"
+        ></google-signin>
+
+        <template is="dom-if" if="[[ !signedIn ]]">
+            <div class="customBtn signIn" on-tap="signIn">
+                <span class="icon"></span>
+                <span class="buttonText">Sign in with Google</span>
+            </div>
+        </template>
+        <template is="dom-if" if="[[ signedIn]]">
+            <div class="customBtn signOut" on-tap="signOut">
+                <span class="icon"></span>
+                <span class="buttonText">Sign out</span>
+            </div>
+        </template>
+    </template>
+
+    <script>
+        Polymer({
+            is: "signin-custom",
+
+            properties:{
+                clientId: '',
+                scopes: '',
+                cookiePolicy: 'single_host_origin',
+                signedIn:{
+                    type: Boolean,
+                    value: false,
+                    notify: true,
+                    reflectToAttribute: true
+                }
+            },
+
+            signInSuccess: function (resp) {
+                //this.signedIn = true;
+            },
+            signedOut: function (resp) {
+                //this.signedIn = false;
+            },
+            signIn: function () {
+                this.$.signinElement.signIn();
+            },
+            signOut: function () {
+                this.$.signinElement.signOut();
+                localStorage.removeItem('accessToken');
+            }
+        });
+    </script>
+</dom-module>
