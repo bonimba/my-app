@@ -36,6 +36,12 @@
                     type: String,
                     value: 'select_account',
                     readOnly: true
+                },
+                signedIn:{
+                    type: Boolean,
+                    value: false,
+                    notify: true,
+                    observer: '_isAuthorized'
                 }
             },
 
@@ -50,7 +56,11 @@
             signOut: function() {
                 this.accessToken = null;
                 localStorage.removeItem('accessToken');
+            },
+            _isAuthorized: function(){
+                this.fire('iron-signal', {name: 'authorized', data: this.signedIn});
             }
+
         });
     </script>
 </dom-module>

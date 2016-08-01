@@ -1,13 +1,13 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../cards/video-card.html">
-<link rel="import" href="../data/channel-data.html">
+<link rel="import" href="../data/highlights-data.html">
 <link rel="import" href="../data/channel-statistics.html">
 <link rel="import" href="../button/sort-button.html">
 <link rel="import" href="../data/is-authorized.html">
 <link rel="import" href="../my-icons.html">
 
-<dom-module id="video-list">
+<dom-module id="highlights-list">
     <template>
         <style>
             :host {
@@ -26,13 +26,11 @@
         <is-authorized signed-in="{{signedIn}}"></is-authorized>
 
         <template is="dom-if" if="[[signedIn]]">
-
             <iron-localstorage name="id" value="{{id}}"></iron-localstorage>
 
-            <channel-data
-                    id="[[id]]"
-                    response="{{data}}"></channel-data>
-
+            <highlights-data
+                    channel-id="[[id]]"
+                    response="{{data}}"></highlights-data>
 
             <template is="dom-if" if="_isVideoList">
                 <channel-statistics
@@ -44,15 +42,15 @@
             <template is="dom-if" if="[[mergedData]]">
 
                 <iron-list id="list" items="[[mergedData.items]]" as="item">
-                        <video-card
-                                video-id="[[item.videoId]]"
-                                video-title="[[item.videoTitle]]"
-                                channel-name="[[item.channelTitle]]"
-                                video-views="[[item.statistics.views]]"
-                                video-likes="[[item.statistics.likes]]"
-                                video-dislikes="[[item.statistics.dislikes]]"
-                                video-comments="[[item.statistics.comments]]"
-                        ></video-card>
+                    <video-card
+                            video-id="[[item.videoId]]"
+                            video-title="[[item.videoTitle]]"
+                            channel-name="[[item.channelTitle]]"
+                            video-views="[[item.statistics.views]]"
+                            video-likes="[[item.statistics.likes]]"
+                            video-dislikes="[[item.statistics.dislikes]]"
+                            video-comments="[[item.statistics.comments]]"
+                    ></video-card>
                 </iron-list>
                 <sort-button></sort-button>
             </template>
@@ -63,7 +61,7 @@
     <script>
 
         Polymer({
-            is: 'video-list',
+            is: 'highlights-list',
             properties:{
                 videoList:{
                     type: String,
@@ -77,7 +75,7 @@
                     value: null,
                     observer: '_parseData'
                 },
-               statistics:{
+                statistics:{
                     type: Object,
                     value: null,
                     notify: true,
@@ -107,9 +105,9 @@
                 if((this.statistics && !this.statistics.etag) && this.data){
                     this.statistics.items.forEach(function(stat){
                         that.data.items.forEach(function(item){
-                           if(item.videoId === stat.id){
-                               item.statistics = stat;
-                           }
+                            if(item.videoId === stat.id){
+                                item.statistics = stat;
+                            }
                         });
                     });
                     that.mergedData = this.data;
@@ -151,7 +149,7 @@
                         this.data = {items: list};
 
                         this.videoList = this.data.items.map(function(item){
-                                return item.videoId;
+                            return item.videoId;
                         }).join(', ');
                     }
                 }
@@ -268,6 +266,7 @@
                     this.shadowRoot.querySelector('iron-list').notifyResize();
                 }
             }
+
         });
 
     </script>

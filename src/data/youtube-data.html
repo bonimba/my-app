@@ -1,27 +1,18 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">s
+<link rel="import" href="../data/is-authorized.html">
 
 <dom-module id="youtube-data">
 
     <template>
-        <template is="dom-if" if="[[signedIn]]">
-            <iron-localstorage name="accessToken"
-                               value="{{accessToken}}"
-            ></iron-localstorage>
 
-            <template is="dom-if" if="[[accessToken]]">
-                <iron-ajax
-                        auto
-                        url="[[url]]"
-                        params='[[computedParameters]]'
-                        handle-as="json"
-                        headers="[[headers]]"
-                        last-response="{{response}}"
-                ></iron-ajax>
-            </template>
-        </template>
-
+        <iron-ajax
+                auto
+                url="[[url]]"
+                params='[[computedParameters]]'
+                handle-as="json"
+                last-response="{{response}}"
+        ></iron-ajax>
 
     </template>
 
@@ -43,31 +34,26 @@
                 },
                 params : {
                     type: Object,
-                    value: {}
+                    value: {},
+                    notify: true
                 },
 
                 youtubeKey: {
                     type: String,
-                    value: "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA"
+                    value: "AIzaSyDgsvYtLz-BuMYSLt_Zzhde5W9Kl1BnbLA",
+                    readOnly: true
                 },
 
                 computedParameters: {
                     type: Object,
-                    computed: 'computeParameters(params, youtubeKey)'
+                    computed: 'computeParameters(params, youtubeKey)',
+                    notify: true
                 },
                 response: {
                     type: Object,
                     value: {},
                     notify: true,
                     reflectToAttribute: true
-                },
-
-                headers:{
-                    computed: 'computeHeader(accessToken)'
-                },
-                accessToken:{
-                    type: String,
-                    value: ''
                 },
 
                 signedIn:{
@@ -92,6 +78,10 @@
                 parameters.key = youtubeKey;
 
                 return parameters;
+            },
+
+            isSignedIn: function(resp){
+                console.log(resp);
             }
 
         });

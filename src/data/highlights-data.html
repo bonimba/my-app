@@ -10,17 +10,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../data/youtube-data.html">
-
+<link rel="import" href="../data/is-authorized.html">
 
 <dom-module id="highlights-data">
 
     <template>
-       <youtube-data
-            specific="[[specific]]"
-            params="[[params]]"
-            response="{{response}}"
-            signed-in="[[signedIn]]"
-       ></youtube-data>
+
+        <is-authorized signed-in="{{signedIn}}"></is-authorized>
+
+        <template is="dom-if" is="[[signedIn]]">
+            <youtube-data
+                    specific="[[specific]]"
+                    params="[[parameters]]"
+                    response="{{response}}"
+            ></youtube-data>
+        </template>
+
+
     </template>
 
     <script>
@@ -36,7 +42,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 params: {
                     type: Object,
-                    value: {"part": "snippet, contentDetails", "maxResults": "50", "mine": true}
+                    value: {"part": "snippet, contentDetails", "maxResults": 50}
                 },
                 response: {
                     type: Object,
@@ -47,14 +53,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 channelId: {
                     type: String,
-                    value: ''
+                    value: '',
+                    notify: true
                 },
 
                 signedIn:{
                     type: Boolean,
                     value: false
+                },
+
+                parameters:{
+                    type: Object,
+                    computed: 'computeParameters(params, channelId)'
                 }
+            },
+
+            computeParameters: function(params, channelId){
+                var parameters = params;
+                parameters.channelId = channelId;
+                return parameters;
             }
+
+
         });
 
     </script>
