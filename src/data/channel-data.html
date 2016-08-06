@@ -9,23 +9,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
-<link rel="import" href="../data/youtube-data.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 
 <dom-module id="channel-data">
 
     <template>
 
-        <iron-localstorage name="id" value="{{id}}"></iron-localstorage>
+        <template is="dom-if" if="[[accessToken]]">
+            <iron-ajax
+                    auto
+                    url="https://www.googleapis.com/youtube/v3/activities"
+                    params='[[params]]'
+                    headers='[[headers]]'
+                    handle-as="json"
+                    last-response="{{response}}"
+            ></iron-ajax>
+        </template>
 
-        <youtube-data
-                specific="[[specific]]"
-                params="[[parameters]]"
-                response="{{response}}"
-        ></youtube-data>
+
     </template>
-
 
     <script>
 
@@ -34,51 +37,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             is: 'channel-data',
 
             properties: {
-                specific:{
-                    type: String,
-                    value: 'channels'
-                },
-                params:{
+                params: {
                     type: Object,
-                    value: {"part": "contentDetails", "maxResults": 50}
+                    value: {"part": "snippet, contentDetails", "maxResults": "50", "mine": true}
                 },
 
-                username:{
-                    type: String,
-                    value: "bonimba33733"
-                },
-                parameters:{
-                    type: Object,
-                    computed: 'computedParameters(params, id)'
-                },
                 response: {
                     type: Object,
-                    value: {},
                     notify: true,
                     reflectToAttribute: true
                 },
-                signedIn:{
-                    type: Boolean,
-                    value: false
-                },
 
-                id:{
+                accessToken: {
                     type: String,
                     value: '',
                     notify: true
+                },
+
+                headers:{
+                    computed: 'computeHeaders(accessToken)'
                 }
             },
 
-            computedParameters: function(params, id){
-                var parameters = params;
-                parameters.id = id;
-                return parameters;
-            },
-
-            _isChannel(){
-                return this.specific === "channels";
+            computeHeaders: function(accessToken){
+                return {"Authorization": "Bearer "+ accessToken};
             }
-
         });
 
     </script>

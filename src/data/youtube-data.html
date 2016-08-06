@@ -1,6 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../data/is-authorized.html">
 
 <dom-module id="youtube-data">
 
@@ -51,15 +50,9 @@
                 },
                 response: {
                     type: Object,
-                    value: {},
                     notify: true,
-                    reflectToAttribute: true
-                },
-
-                signedIn:{
-                    type: Boolean,
-                    value: false,
-                    notify: true
+                    reflectToAttribute: true,
+                    readOnly: true
                 }
             },
 
@@ -78,10 +71,6 @@
                 parameters.key = youtubeKey;
 
                 return parameters;
-            },
-
-            isSignedIn: function(resp){
-                console.log(resp);
             }
 
         });

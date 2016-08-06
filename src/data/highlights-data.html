@@ -9,21 +9,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../data/youtube-data.html">
-<link rel="import" href="../data/is-authorized.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
 
 <dom-module id="highlights-data">
 
     <template>
 
-        <is-authorized signed-in="{{signedIn}}"></is-authorized>
-
-        <template is="dom-if" is="[[signedIn]]">
-            <youtube-data
-                    specific="[[specific]]"
-                    params="[[parameters]]"
-                    response="{{response}}"
-            ></youtube-data>
+        <template is="dom-if" if="[[accessToken]]">
+            <iron-ajax
+                    auto
+                    url="https://www.googleapis.com/youtube/v3/activities"
+                    params='[[params]]'
+                    headers='[[headers]]'
+                    handle-as="json"
+                    last-response="{{response}}"
+            ></iron-ajax>
         </template>
 
 
@@ -36,45 +37,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             is: 'highlights-data',
 
             properties: {
-                specific: {
-                    type: String,
-                    value: 'activities'
-                },
                 params: {
                     type: Object,
-                    value: {"part": "snippet, contentDetails", "maxResults": 50}
+                    value: {"part": "snippet, contentDetails", "maxResults": "50", "home": true}
                 },
+
                 response: {
                     type: Object,
-                    value: {},
                     notify: true,
                     reflectToAttribute: true
                 },
 
-                channelId: {
+                accessToken: {
                     type: String,
                     value: '',
                     notify: true
                 },
 
-                signedIn:{
-                    type: Boolean,
-                    value: false
-                },
-
-                parameters:{
-                    type: Object,
-                    computed: 'computeParameters(params, channelId)'
+                headers:{
+                    computed: 'computeHeaders(accessToken)'
                 }
             },
 
-            computeParameters: function(params, channelId){
-                var parameters = params;
-                parameters.channelId = channelId;
-                return parameters;
+            computeHeaders: function(accessToken){
+                return {"Authorization": "Bearer "+ accessToken};
             }
-
-
         });
 
     </script>

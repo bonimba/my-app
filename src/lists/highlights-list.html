@@ -4,7 +4,6 @@
 <link rel="import" href="../data/highlights-data.html">
 <link rel="import" href="../data/channel-statistics.html">
 <link rel="import" href="../button/sort-button.html">
-<link rel="import" href="../data/is-authorized.html">
 <link rel="import" href="../my-icons.html">
 
 <dom-module id="highlights-list">
@@ -23,13 +22,9 @@
 
         </style>
 
-        <is-authorized signed-in="{{signedIn}}"></is-authorized>
-
         <template is="dom-if" if="[[signedIn]]">
-            <iron-localstorage name="id" value="{{id}}"></iron-localstorage>
-
             <highlights-data
-                    channel-id="[[id]]"
+                    access-token="[[accessToken]]"
                     response="{{data}}"></highlights-data>
 
             <template is="dom-if" if="_isVideoList">
@@ -40,17 +35,18 @@
             </template>
 
             <template is="dom-if" if="[[mergedData]]">
-
                 <iron-list id="list" items="[[mergedData.items]]" as="item">
-                    <video-card
-                            video-id="[[item.videoId]]"
-                            video-title="[[item.videoTitle]]"
-                            channel-name="[[item.channelTitle]]"
-                            video-views="[[item.statistics.views]]"
-                            video-likes="[[item.statistics.likes]]"
-                            video-dislikes="[[item.statistics.dislikes]]"
-                            video-comments="[[item.statistics.comments]]"
-                    ></video-card>
+                    <template>
+                        <video-card
+                                video-id="[[item.videoId]]"
+                                video-title="[[item.videoTitle]]"
+                                channel-name="[[item.channelTitle]]"
+                                video-views="[[item.statistics.views]]"
+                                video-likes="[[item.statistics.likes]]"
+                                video-dislikes="[[item.statistics.dislikes]]"
+                                video-comments="[[item.statistics.comments]]"
+                        ></video-card>
+                    </template>
                 </iron-list>
                 <sort-button></sort-button>
             </template>
@@ -96,6 +92,13 @@
 
             },
 
+            attached: function(){
+                var signedIn = localStorage.getItem('signedIn');
+                var accessToken = localStorage.getItem('accessToken');
+                this.set('signedIn', signedIn);
+                this.set('accessToken', accessToken);
+            },
+
             _isVideoList: function(){
                 return this.videoList !== '';
             },
@@ -123,34 +126,36 @@
                             var newObj = {};
                             var videoId ='';
                             if(item.snippet){
-                                switch(item.snippet.type){
-                                    case('upload'):
-                                        videoId = item.contentDetails.upload.videoId;
-                                        break;
-                                    case('like'):
-                                        videoId = item.contentDetails.like.resourceId.videoId;
-                                        break;
-                                    case('playlistItem'):
-                                        videoId = item.contentDetails.playlistItem.resourceId.videoId;
-                                        break;
+                                if(item.snippet.type === "recommendation"){
+                                    videoId = item.contentDetails.recommendation.resourceId.videoId;
+
+                                    if(tempList.indexOf(videoId) === -1){
+                                        tempList.push(videoId);
+                                        newObj.videoId = videoId;
+                                        newObj.videoTitle = item.snippet.title;
+                                        newObj.channelTitle = item.snippet.channelTitle;
+                                        newObj.description = item.snippet.description;
+
+                                        list.push(newObj);
+                                    }
+
                                 }
 
-                                if(tempList.indexOf(videoId) === -1){
-                                    tempList.push(videoId);
-                                    newObj.videoId = videoId;
-                                    newObj.videoTitle = item.snippet.title;
-                                    newObj.channelTitle = item.snippet.channelTitle;
-
-                                    list.push(newObj);
-                                }
                             }
 
                         });
                         this.data = {items: list};
 
-                        this.videoList = this.data.items.map(function(item){
+                        var videoList = this.data.items.map(function(item){
                             return item.videoId;
                         }).join(', ');
+
+                        if(videoList.startsWith(",")){
+                            videoList = videoList.substr(1, videoList.length);
+                        }
+
+                        this.videoList = videoList;
+
                     }
                 }
             },

@@ -4,7 +4,6 @@
 <link rel="import" href="../data/channel-data.html">
 <link rel="import" href="../data/channel-statistics.html">
 <link rel="import" href="../button/sort-button.html">
-<link rel="import" href="../data/is-authorized.html">
 <link rel="import" href="../my-icons.html">
 
 <dom-module id="video-list">
@@ -23,17 +22,10 @@
 
         </style>
 
-        <is-authorized signed-in="{{signedIn}}"></is-authorized>
-
         <template is="dom-if" if="[[signedIn]]">
-
-            <iron-localstorage name="id" value="{{id}}"></iron-localstorage>
-
             <channel-data
-                    id="[[id]]"
+                    access-token="[[accessToken]]"
                     response="{{data}}"></channel-data>
-
-
             <template is="dom-if" if="_isVideoList">
                 <channel-statistics
                         video-list="{{videoList}}"
@@ -44,6 +36,7 @@
             <template is="dom-if" if="[[mergedData]]">
 
                 <iron-list id="list" items="[[mergedData.items]]" as="item">
+                    <template>
                         <video-card
                                 video-id="[[item.videoId]]"
                                 video-title="[[item.videoTitle]]"
@@ -53,6 +46,8 @@
                                 video-dislikes="[[item.statistics.dislikes]]"
                                 video-comments="[[item.statistics.comments]]"
                         ></video-card>
+                    </template>
+
                 </iron-list>
                 <sort-button></sort-button>
             </template>
@@ -94,8 +89,20 @@
                     type: Boolean,
                     value: false,
                     notify: true
+                },
+
+                id: {
+                    type: String,
+                    notify: true
                 }
 
+            },
+
+            attached: function(){
+              var signedIn = localStorage.getItem('signedIn');
+              var accessToken = localStorage.getItem('accessToken');
+              this.set('signedIn', signedIn);
+              this.set('accessToken', accessToken);
             },
 
             _isVideoList: function(){
@@ -125,26 +132,20 @@
                             var newObj = {};
                             var videoId ='';
                             if(item.snippet){
-                                switch(item.snippet.type){
-                                    case('upload'):
-                                        videoId = item.contentDetails.upload.videoId;
-                                        break;
-                                    case('like'):
-                                        videoId = item.contentDetails.like.resourceId.videoId;
-                                        break;
-                                    case('playlistItem'):
-                                        videoId = item.contentDetails.playlistItem.resourceId.videoId;
-                                        break;
+                                if(item.snippet.type === "subscription"){
+                                    videoId = item.contentDetails.subscription.resourceId.videoId;
+
+                                    if(tempList.indexOf(videoId) === -1){
+                                        tempList.push(videoId);
+                                        newObj.videoId = videoId;
+                                        newObj.videoTitle = item.snippet.title;
+                                        newObj.channelTitle = item.snippet.channelTitle;
+
+                                        list.push(newObj);
+                                    }
                                 }
 
-                                if(tempList.indexOf(videoId) === -1){
-                                    tempList.push(videoId);
-                                    newObj.videoId = videoId;
-                                    newObj.videoTitle = item.snippet.title;
-                                    newObj.channelTitle = item.snippet.channelTitle;
 
-                                    list.push(newObj);
-                                }
                             }
 
                         });

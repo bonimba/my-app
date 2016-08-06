@@ -46,11 +46,14 @@
             },
 
             signIn: function(resp) {
-                var accessToken = JSON.stringify(resp.detail.access_token);
-                accessToken && localStorage.setItem('accessToken', accessToken);
+                if(resp){
+                    var accessToken = JSON.stringify(resp.detail.access_token);
+                    accessToken && localStorage.setItem('accessToken', accessToken);
 
-                var expires = JSON.stringify(resp.detail.expires_at);
-                localStorage.setItem('expiresAt', expires);
+                    //var expires = JSON.stringify(resp.detail.expires_at);
+                    //localStorage.setItem('expiresAt', expires);
+                }
+
                 this.domHost.$.dialog.close();
             },
             signOut: function() {
@@ -59,6 +62,8 @@
             },
             _isAuthorized: function(){
                 this.fire('iron-signal', {name: 'authorized', data: this.signedIn});
+                localStorage.setItem('signedIn', this.signedIn);
+
             }
 
         });
