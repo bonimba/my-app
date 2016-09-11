@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../cards/video-card.html">
+<link rel="import" href="../cards/videochannel-card.html">
 <link rel="import" href="../data/channel-data.html">
 <link rel="import" href="../data/channel-statistics.html">
 <link rel="import" href="../button/sort-button.html">
@@ -37,7 +37,7 @@
 
                 <iron-list id="list" items="[[mergedData.items]]" as="item">
                     <template>
-                        <video-card
+                        <videochannel-card
                                 video-id="[[item.videoId]]"
                                 video-title="[[item.videoTitle]]"
                                 channel-name="[[item.channelTitle]]"
@@ -45,7 +45,7 @@
                                 video-likes="[[item.statistics.likes]]"
                                 video-dislikes="[[item.statistics.dislikes]]"
                                 video-comments="[[item.statistics.comments]]"
-                        ></video-card>
+                        ></videochannel-card>
                     </template>
 
                 </iron-list>
