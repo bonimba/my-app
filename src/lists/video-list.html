@@ -132,8 +132,8 @@
                             var newObj = {};
                             var videoId ='';
                             if(item.snippet){
-                                if(item.snippet.type === "subscription"){
-                                    videoId = item.contentDetails.subscription.resourceId.videoId;
+                                var type = item.snippet.type;
+                                    videoId = item.contentDetails[type].videoId;
 
                                     if(tempList.indexOf(videoId) === -1){
                                         tempList.push(videoId);
@@ -144,10 +144,6 @@
                                         list.push(newObj);
                                     }
                                 }
-
-
-                            }
-
                         });
                         this.data = {items: list};
 
