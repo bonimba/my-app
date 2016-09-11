@@ -132,8 +132,7 @@
                             var newObj = {};
                             var videoId ='';
                             if(item.snippet){
-                                var type = item.snippet.type;
-                                    videoId = item.contentDetails[type].videoId;
+                                    videoId = item.id.videoId;
 
                                     if(tempList.indexOf(videoId) === -1){
                                         tempList.push(videoId);
