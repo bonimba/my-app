@@ -1,0 +1,272 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../cards/video-card.html">
+<link rel="import" href="../data/channel-data.html">
+<link rel="import" href="../data/channel-statistics.html">
+<link rel="import" href="../button/sort-button.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="search-list">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+            }
+
+            sort-button{
+                position: fixed;
+                bottom: 25px;
+                right: 50px;
+            }
+
+        </style>
+
+        <template is="dom-if" if="[[signedIn]]">
+            <search-data
+                    access-token="[[accessToken]]"
+                    response="{{data}}"></search-data>
+            <template is="dom-if" if="_isVideoList">
+                <channel-statistics
+                        video-list="{{videoList}}"
+                        statistics="{{statistics}}"
+                ></channel-statistics>
+            </template>
+
+            <template is="dom-if" if="[[mergedData]]">
+
+                <iron-list id="list" items="[[mergedData.items]]" as="item">
+                    <template>
+                        <video-card
+                                video-id="[[item.videoId]]"
+                                video-title="[[item.videoTitle]]"
+                                channel-name="[[item.channelTitle]]"
+                                video-views="[[item.statistics.views]]"
+                                video-likes="[[item.statistics.likes]]"
+                                video-dislikes="[[item.statistics.dislikes]]"
+                                video-comments="[[item.statistics.comments]]"
+                        ></video-card>
+                    </template>
+
+                </iron-list>
+                <sort-button></sort-button>
+            </template>
+        </template>
+    </template>
+
+
+    <script>
+
+        Polymer({
+            is: 'search-list',
+            properties:{
+                videoList:{
+                    type: String,
+                    value: '',
+                    notify: true,
+                    reflectToAttributes: true
+                },
+
+                data:{
+                    type: Object,
+                    value: null,
+                    observer: '_parseData'
+                },
+               statistics:{
+                    type: Object,
+                    value: null,
+                    notify: true,
+                    observer: '_mergeData'
+                },
+                mergedData:{
+                    type: Object,
+                    value: null,
+                    notify: true,
+                    observer: 'updateList'
+                },
+
+                signedIn:{
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
+
+                id: {
+                    type: String,
+                    notify: true
+                }
+
+            },
+
+            attached: function(){
+              var signedIn = localStorage.getItem('signedIn');
+              var accessToken = localStorage.getItem('accessToken');
+              this.set('signedIn', signedIn);
+              this.set('accessToken', accessToken);
+            },
+
+            _isVideoList: function(){
+                return this.videoList !== '';
+            },
+
+            _mergeData: function(){
+                var that = this;
+                if((this.statistics && !this.statistics.etag) && this.data){
+                    this.statistics.items.forEach(function(stat){
+                        that.data.items.forEach(function(item){
+                           if(item.videoId === stat.id){
+                               item.statistics = stat;
+                           }
+                        });
+                    });
+                    that.mergedData = this.data;
+                }
+            },
+
+            _parseData: function(resp){
+                if(this.data && this.data.etag){
+                    var list = [];
+                    if(resp){
+                        var tempList = [];
+                        resp.items.forEach(function(item){
+                            var newObj = {};
+                            var videoId ='';
+                            if(item.snippet){
+                                var type = item.snippet.type;
+                                    videoId = item.contentDetails[type].videoId;
+
+                                    if(tempList.indexOf(videoId) === -1){
+                                        tempList.push(videoId);
+                                        newObj.videoId = videoId;
+                                        newObj.videoTitle = item.snippet.title;
+                                        newObj.channelTitle = item.snippet.channelTitle;
+
+                                        list.push(newObj);
+                                    }
+                                }
+                        });
+                        this.data = {items: list};
+
+                        this.videoList = this.data.items.map(function(item){
+                                return item.videoId;
+                        }).join(', ');
+                    }
+                }
+            },
+
+            _sortBy: function(type){
+                switch(type){
+                    case('sort-by-alpha'):
+                        this.sortByAlpha();
+                        break;
+                    case('thumb-up'):
+                        this.sortByLikes();
+                        break;
+                    case('thumb-down'):
+                        this.sortByDislikes();
+                        break;
+                    case('share'):
+                        this.sortByShares();
+                        break;
+                    case('chat'):
+                        this.sortByComments();
+                        break;
+                    case('visibility'):
+                        this.sortByViews();
+                        break;
+                    default:
+                        console.log('default');
+                }
+            },
+
+            sortByAlpha: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(a.videoTitle < b.videoTitle) return -1;
+                        if(a.videoTitle > b.videoTitle) return 1;
+                        return 0;
+                    });
+
+                    this.mergedData = {items: items};
+                }
+            },
+
+            sortByLikes: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(parseInt(a.statistics.likes) < parseInt(b.statistics.likes)) return 1;
+                        if(parseInt(a.statistics.likes) > parseInt(b.statistics.likes)) return -1;
+                        return 0;
+                    });
+
+                    this.mergedData = {items: items};
+                }
+            },
+
+            sortByDislikes: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(parseInt(a.statistics.dislikes) < parseInt(b.statistics.dislikes)) return 1;
+                        if(parseInt(a.statistics.dislikes) > parseInt(b.statistics.dislikes)) return -1;
+                        return 0;
+                    });
+
+                    this.mergedData = {items: items};
+                }
+            },
+
+            sortByViews: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(parseInt(a.statistics.views) < parseInt(b.statistics.views)) return 1;
+                        if(parseInt(a.statistics.views) > parseInt(b.statistics.views)) return -1;
+                        return 0;
+                    });
+
+                    this.mergedData = {items: items};
+
+                }
+            },
+
+            sortByShares: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(parseInt(a.statistics.shares) < parseInt(b.statistics.shares)) return 1;
+                        if(parseInt(a.statistics.shares) > parseInt(b.statistics.shares)) return -1;
+                        return 0;
+                    });
+
+                    this.mergedData = {items: items};
+
+                }
+            },
+
+            sortByComments: function(){
+                var data = this.mergedData.items;
+                if(data){
+                    var items = data.sort(function(a, b){
+                        if(parseInt(a.statistics.comments) < parseInt(b.statistics.comments)) return 1;
+                        if(parseInt(a.statistics.comments) > parseInt(b.statistics.comments)) return -1;
+                        return 0;
+                    });
+
+                    this.mergedData = {items: items};
+
+                }
+            },
+
+            updateList: function(){
+                if(this.shadowRoot.querySelector('iron-list')){
+                    this.shadowRoot.querySelector('iron-list').notifyResize();
+                }
+            }
+        });
+
+    </script>
+
+</dom-module>
