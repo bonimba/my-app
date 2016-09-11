@@ -1,0 +1,139 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-youtube/google-youtube.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="videochannel-card">
+
+    <style>
+        :host {
+            display: block;
+            box-sizing: border-box;
+            padding:2%;
+        }
+
+        paper-card{
+            width:100%;
+        }
+
+        paper-icon-button{
+            position: relative;
+            float: right;
+            padding: 10px;
+        }
+
+        #channel-icon, #channel-name{
+            position: relative;
+            float: left;
+            padding: 10px;
+        }
+
+        .self-end{
+            margin-top: 50px;
+        }
+
+        ul{
+            list-style: none;
+        }
+
+        ul li{
+            display: inline;
+            margin-right: 5%;
+        }
+
+    </style>
+
+    <template>
+        <paper-card elevation="2">
+            <div class="card-content">
+                <div id="video-content">
+                    <google-youtube
+                            video-id="[[videoId]]"
+                            width="100%"
+                            rel="0"
+                            start="0"
+                            autoplay="0">
+                    </google-youtube>
+                    <div class="self-end">
+                        <label>[[videoTitle]]</label>
+                        <ul>
+                            <li>
+                                <label>[[videoViews]]</label>
+                                <iron-icon icon="visibility"></iron-icon>
+                            </li>
+                            <li>
+                                <label>[[videoLikes]]</label>
+                                <iron-icon icon="thumb-up"></iron-icon>
+                            </li>
+                            <li>
+                                <label>[[videoDislikes]]</label>
+                                <iron-icon icon="thumb-down"></iron-icon>
+                            </li>
+                            <!-- <li>
+                                <label>[[videoShares]]</label>
+                                <iron-icon icon="share"></iron-icon>
+                            </li> -->
+                            <li>
+                                <label>[[videoComments]]</label>
+                                <iron-icon icon="chat"></iron-icon>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </paper-card>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'videochannel-card',
+            properties: {
+                videoId: {
+                    type: String,
+                    value:"TXv2jIfF7es"
+                },
+                videoTitle: {
+                    type: String,
+                    value: "Title"
+                },
+                videoViews: {
+                    type: String,
+                    value: "Views"
+                },
+                videoLikes: {
+                    type: String,
+                    value: "Views"
+                },
+                videoTime: {
+                    type: String,
+                    value: "Time"
+                },
+                videoDislikes: {
+                    type: String,
+                    value: "Unlikes"
+                },
+                videoShares: {
+                    type: String,
+                    value: "Shares"
+                },
+                channelIcon: {
+                    type: String,
+                    value: ''
+                },
+                channelName: {
+                    type: String,
+                    value: "Channel Name"
+                },
+                videoComments: {
+                    type: String,
+                    value: "Comments"
+                }
+            }
+        });
+
+    </script>
+
+</dom-module>
