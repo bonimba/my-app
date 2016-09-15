@@ -1,5 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/slide-from-right-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/slide-right-animation.html">
 
 <dom-module id="sort-button">
     <template>
@@ -14,6 +17,7 @@
                 right: -15px;
                 margin-bottom: 10px;
             }
+
         </style>
         <template is="dom-if" if="[[showList]]">
                 <paper-fab mini class="mini" icon="sort-by-alpha" title="a-z" on-tap="sortBy"></paper-fab>
@@ -31,11 +35,41 @@
         Polymer({
             is: 'sort-button',
 
+            behaviors: [
+                Polymer.NeonAnimationRunnerBehavior],
+
+            listeners: {
+                'neon-animation-finish': '_onNeonAnimationFinish',
+                'mousedown': 'hide',
+                'mouseup': 'show'
+            },
+
             properties: {
-                showList:{
+                showList: {
                     type: Boolean,
                     value: false,
                     notify: true
+                },
+
+                showFAB: {
+                    type: Boolean,
+                    value: true,
+                    notify: true
+                }
+            },
+
+            animationConfig: {
+                value: function(){
+                    return {
+                        'entry': {
+                            name: 'slide-from-right-animation',
+                            node: this
+                        },
+                        'exit' : {
+                            name: 'slide-right-animation',
+                            node: this
+                        }
+                    };
                 }
             },
 
@@ -43,13 +77,37 @@
                 this.domHost._sortBy(type);
             },*/
 
-            sortBy(e){
+
+
+            sortBy: function(e){
                 var type = e.target.$.icon._iconName;
                 this.domHost._sortBy(type);
+                this._showSortList();
             },
 
             _showSortList: function(){
                 this.showList = !this.showList;
+            },
+
+            hide: function(){
+                this.showList = false;
+                this.showFAB = false;
+                this.cancelAnimation();
+                this.playAnimation('exit');
+            },
+
+            show: function(){
+                this.showList = false;
+                this.showFAB = true;
+                this.style.display = 'block';
+                this.cancelAnimation();
+                this.playAnimation('entry');
+            },
+
+            _onNeonAnimationFinish: function(){
+                if(!this.showFAB){
+                    this.style.display = 'none';
+                }
             }
 
         });

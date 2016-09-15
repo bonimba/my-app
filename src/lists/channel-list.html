@@ -1,12 +1,12 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../cards/video-card.html">
-<link rel="import" href="../data/highlights-data.html">
+<link rel="import" href="../data/channel-data.html">
 <link rel="import" href="../data/channel-statistics.html">
 <link rel="import" href="../button/sort-button.html">
 <link rel="import" href="../my-icons.html">
 
-<dom-module id="highlights-list">
+<dom-module id="channel-list">
     <template>
         <style>
             :host {
@@ -22,48 +22,51 @@
 
         </style>
 
-        <template is="dom-if" if="[[signedIn]]">
-            <highlights-data
-                    access-token="[[accessToken]]"
-                    response="{{data}}"></highlights-data>
+        <channel-data
+                response="{{data}}"></channel-data>
 
-            <template is="dom-if" if="_isVideoList">
-                <channel-statistics
-                        video-list="{{videoList}}"
-                        statistics="{{statistics}}"
-                ></channel-statistics>
-            </template>
 
-            <template is="dom-if" if="[[mergedData]]">
-                <iron-list id="list" items="[[mergedData.items]]" as="item">
-                    <template>
-                        <video-card
-                                video-id="[[item.videoId]]"
-                                video-title="[[item.videoTitle]]"
-                                channel-name="[[item.channelTitle]]"
-                                video-views="[[item.statistics.views]]"
-                                video-likes="[[item.statistics.likes]]"
-                                video-dislikes="[[item.statistics.dislikes]]"
-                                video-comments="[[item.statistics.comments]]"
-                        ></video-card>
-                    </template>
-                </iron-list>
-                <sort-button></sort-button>
-            </template>
+        <template is="dom-if" if="_isVideoList">
+            <channel-statistics
+                    video-list="{{videoList}}"
+                    statistics="{{statistics}}"
+            ></channel-statistics>
         </template>
+
+        <template is="dom-if" if="[[mergedData]]">
+
+            <iron-list id="list" items="[[mergedData.items]]" as="item">
+                    <video-card
+                            video-id="[[item.videoId]]"
+                            video-title="[[item.videoTitle]]"
+                            channel-name="[[item.channelTitle]]"
+                            video-views="[[item.statistics.views]]"
+                            video-likes="[[item.statistics.likes]]"
+                            video-dislikes="[[item.statistics.dislikes]]"
+                            video-comments="[[item.statistics.comments]]"
+                    ></video-card>
+            </iron-list>
+            <sort-button></sort-button>
+        </template>
+
     </template>
 
 
     <script>
 
         Polymer({
-            is: 'highlights-list',
+            is: 'channel-list',
             properties:{
+                type:{
+                    type: String,
+                    value: "channel"
+                },
+
                 videoList:{
                     type: String,
                     value: '',
                     notify: true,
-                    reflectToAttributes: true
+                    reflectToAttributed: true
                 },
 
                 data:{
@@ -82,21 +85,15 @@
                     value: null,
                     notify: true,
                     observer: 'updateList'
-                },
-
-                signedIn:{
-                    type: Boolean,
-                    value: false,
-                    notify: true
                 }
 
             },
+            _isChannel: function(type){
+                return type === "channel";
+            },
 
-            attached: function(){
-                var signedIn = localStorage.getItem('signedIn');
-                var accessToken = localStorage.getItem('accessToken');
-                this.set('signedIn', signedIn);
-                this.set('accessToken', accessToken);
+            _isHighlight: function(type){
+                return type === "highlight";
             },
 
             _isVideoList: function(){
@@ -126,36 +123,34 @@
                             var newObj = {};
                             var videoId ='';
                             if(item.snippet){
-                                if(item.snippet.type === "recommendation"){
-                                    videoId = item.contentDetails.recommendation.resourceId.videoId;
-
-                                    if(tempList.indexOf(videoId) === -1){
-                                        tempList.push(videoId);
-                                        newObj.videoId = videoId;
-                                        newObj.videoTitle = item.snippet.title;
-                                        newObj.channelTitle = item.snippet.channelTitle;
-                                        newObj.description = item.snippet.description;
-
-                                        list.push(newObj);
-                                    }
-
+                                switch(item.snippet.type){
+                                    case('upload'):
+                                        videoId = item.contentDetails.upload.videoId;
+                                        break;
+                                    case('like'):
+                                        videoId = item.contentDetails.like.resourceId.videoId;
+                                        break;
+                                    case('playlistItem'):
+                                        videoId = item.contentDetails.playlistItem.resourceId.videoId;
+                                        break;
                                 }
 
+                                if(tempList.indexOf(videoId) === -1){
+                                    tempList.push(videoId);
+                                    newObj.videoId = videoId;
+                                    newObj.videoTitle = item.snippet.title;
+                                    newObj.channelTitle = item.snippet.channelTitle;
+
+                                    list.push(newObj);
+                                }
                             }
 
                         });
                         this.data = {items: list};
 
-                        var videoList = this.data.items.map(function(item){
+                        this.videoList = this.data.items.map(function(item){
                             return item.videoId;
                         }).join(', ');
-
-                        if(videoList.startsWith(",")){
-                            videoList = videoList.substr(1, videoList.length);
-                        }
-
-                        this.videoList = videoList;
-
                     }
                 }
             },
@@ -243,7 +238,7 @@
                             if(parseInt(a.statistics.views) > parseInt(b.statistics.views)) return -1;
                             return 0;
                         }
-                        return 0;
+                       return 0;
                     });
 
                     this.mergedData = {items: items};

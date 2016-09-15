@@ -48,16 +48,18 @@
 
     <template>
         <paper-card elevation="2">
-            <div id="card-header">
-                <div id="channel-icon">
-                    <iron-icon icon='face'></iron-icon>
-                </div>
-                <div id="channel-name">
-                    <label>[[channelName]]</label>
-                </div>
-                <paper-icon-button icon="more-vert"></paper-icon-button>
+            <template is="dom-if" if="[[channelName]]">
+                <div id="card-header">
+                    <div id="channel-icon">
+                        <iron-icon icon='face'></iron-icon>
+                    </div>
+                    <div id="channel-name">
+                        <label>[[channelName]]</label>
+                    </div>
+                    <paper-icon-button icon="more-vert"></paper-icon-button>
 
-            </div>
+                </div>
+            </template>
             <div class="card-content">
                 <div id="video-content">
                     <google-youtube
@@ -100,6 +102,7 @@
     <script>
         Polymer({
             is: 'video-card',
+
             properties: {
                 videoId: {
                     type: String,
